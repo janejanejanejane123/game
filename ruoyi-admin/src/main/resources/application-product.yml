@@ -1,0 +1,245 @@
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为8080
+  port: 8080
+  servlet:
+    # 应用的访问路径
+    context-path: /admin-api
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # 连接数满后的排队数，默认为100
+    accept-count: 1000
+    threads:
+      # tomcat最大线程数，默认为200
+      max: 800
+      # Tomcat启动初始化的线程数，默认值10
+      min-spare: 100
+
+# 日志配置
+logging:
+  level:
+    com.ruoyi: debug
+    org.springframework: warn
+
+# 用户配置
+user:
+  password:
+    # 密码最大错误次数
+    maxRetryCount: 5
+    # 密码锁定时间（默认30分钟）
+    lockTime: 30
+
+# Spring配置
+spring:
+  data:
+    mongodb:
+      uri: mongodb://mongodb:1q#qABC-xiD#7FK-9U#5i#X@192.168.92.19:27017,192.168.52.35:27017,192.168.31.32:27017/chat_record
+  main:
+    allow-bean-definition-overriding: true
+  messages:
+    basename: i18n/messages
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size:  10MB
+      max-request-size:  20MB
+  devtools:
+    restart:
+      enabled: false
+  shardingsphere:
+    datasource:
+      names: ds0master
+      ds0master:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://prod-ebi.c5giowcvswph.ap-southeast-1.rds.amazonaws.com:3306/e_coin?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        username: admin
+        password: o[^4&x-_EldC.c^)
+        initialSize: 5      #初始化大小
+        maxActive: 10       #最大值
+        maxWait: 200      #最大等待时间，配置获取连接等待超时，时间单位都是毫秒ms
+        timeBetweenEvictionRunsMillis: 60000    #配置间隔多久才进行一次检测，检测需要关闭的空闲连接
+        filters: stat,wall
+        webStatFilter:
+          enabled: true
+          url-pattern: /*
+          exclusions: /druid/*
+        statViewServlet:
+          enabled: true
+          allow: 127.0.0.1
+          url-pattern: /druid/*
+          login-username: admin
+          login-password: ecoinAdmin123456
+    sharding:
+      tables:
+        t_treasure:
+          actualDataNodes: ds0master.t_treasure_${1..10}
+          tableStrategy:
+            inline:
+              shardingColumn: uid
+              algorithmExpression: t_treasure_${uid % 10 + 1}
+        t_amount_record:
+          actualDataNodes: ds0master.t_amount_record_${1..10}
+          tableStrategy:
+            inline:
+              shardingColumn: mid
+              algorithmExpression: t_amount_record_${mid % 10 + 1}
+        t_user_order:
+          actualDataNodes: ds0master.t_user_order_${1..5}
+          tableStrategy:
+            inline:
+              shardingColumn: user_id
+              algorithmExpression: t_user_order_${user_id % 5 + 1}
+        t_user_order_detail:
+          actualDataNodes: ds0master.t_user_order_detail_${1..10}
+          tableStrategy:
+            inline:
+              shardingColumn: buyer_id
+              algorithmExpression: t_user_order_detail_${buyer_id % 10 + 1}
+      bindingTables:
+        t_treasure,t_amount_record,t_user_order,t_user_order_detail
+    props:
+      sql:
+        show: true
+  # redis 配置
+  redis:
+    # 地址
+    database: 0
+    password: AA--xiMGxi45A[9^TyVRkvuNlZ;G9mlkL^rv){sbcd^Ki34&x)bz/,<?WsrFKtCb5t&x-_KGgZEl
+    timeout: 5000
+    cluster:
+      #nodes: 13.250.172.99:32001,18.138.34.196:32002,13.250.172.99:32003,18.138.34.196:32004,13.250.172.99:32005,18.138.34.196:32006
+      nodes: 192.168.91.125:7006,192.168.79.200:7006,192.168.44.226:7006,192.168.58.242:7006,192.168.13.116:7006,192.168.11.3:7006
+    lettuce:
+      pool:
+        max-active: 32
+        max-wait: -1
+        max-idle: 64
+        min-idle: 32
+  # 数据源配置
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    druid:
+      # 主库数据源
+      master:
+        url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        username: root
+        password: password
+      # 从库数据源
+      slave:
+        # 从数据源开关/默认关闭
+        enabled: false
+        url:
+        username:
+        password:
+      # 初始连接数
+      initialSize: 5
+      # 最小连接池数量
+      minIdle: 10
+      # 最大连接池数量
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置连接超时时间
+      connectTimeout: 30000
+      # 配置网络超时时间
+      socketTimeout: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      maxEvictableIdleTimeMillis: 900000
+      # 配置检测连接是否有效
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      webStatFilter:
+        enabled: true
+      statViewServlet:
+        enabled: true
+        # 设置白名单，不填则允许所有访问
+        allow:
+        url-pattern: /druid/*
+        # 控制台管理用户名和密码
+        login-username: ruoyi
+        login-password: 123456
+      filter:
+        stat:
+          enabled: true
+          # 慢SQL记录
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+# token配置
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: $e7d817bcc28e453ea09d98e6c3fc5783product
+  # 令牌有效期（默认30分钟）
+  expireTime: 360
+  # redis缓存key
+  redisLoginKey: user_login_tokens
+  maxtoken: 1
+
+#前端加密
+rsa:
+  privateKey: MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAKVHUwfCv980TEf1Te/eLZPOnFfRbDsqOaQHQscWZVuQkKRW0/DT7vFIZhb+Gwha04BAlWpmmgDOPmv99/4w7yoERsErlqWOg6ph3lU7fa4kcJRcw92k3r/yJ+fdwS3EcQw2EhmxNVm7sankDq3GaTT5F54LMz7Att8tnpYUVpIbAgMBAAECgYBDmOxInEpFS+p288kwdbpGXZZsBGczu41fnOie7HYAARxnWmvMb6GmZWn7tWnw/NTL+54gql4KPlAhcvneqLzn1E3G/vzJFn+RxxwxyTfqhsPS+enQyb5kxMC+iUYuCty30eI7g6oGLlCrtnAlpobp2rypO5prWxfaYR9JO/hUYQJBAO4ucwjKWo/+4FyfHrjIK3b3M0K00JPMdZoSExTmcHxE6MABwB4e73gORoz3+JBBUo+qaVupGVkmHWzx9ONOuQUCQQCxpKuwOoI0as7sUc8yC7MOOHSRoJ4qtrF2ewnUYo74OY95oqeung6mSj2Q0K4x3yRL8qZqDR3m+xnDfEewO4ifAkEAjQlWNrNUEwYypsXWNEbbbfONGAfnpk0gqh3fzLVzkDJhvCiNMYjR9j5Fyn2fYxQ7JjUbdBpaly55qCRSBTN9XQJAHsJ4yCcZbKIh+mGgEvZbpta3uI+rU5IW4IEljpUSVIEDCvjTODU+LCUmy/CWeSQ+ULhPgIWM6/YG3AalEyr72QJBAL3I7TIzvZQNJUR2PD1XAII/8Jr0FWEfOwG4MZE4zNhZiasH5+rtt/56dKZm3qZZwo/Vytq+Vy9W6WCfoOIwvrw=
+  charset: UTF-8
+
+# MyBatis配置
+mybatis-plus:
+  # 搜索指定包别名
+  typeAliasesPackage: com.ruoyi.**.domain
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
+
+# PageHelper分页插件
+pagehelper:
+  helperDialect: mysql
+  supportMethodsArguments: true
+  params: count=countSql
+
+#文件服务
+minio:
+  endpoint: http://192.168.87.208:9000
+  accessKey: admin
+  secretKey: 9Ki34&xKGgZ**2022#k
+  bucketName: sys-image
+
+#rocketmq
+rocketmq:
+  name-server: 192.168.47.239:9876;192.168.26.237:9876
+  producer:
+    group: cloud-ecoin-group #生产者分组名称
+    send-message-timeout: 300000 #发送消息超时(毫秒)
+    compress-message-body-threshold: 4096 #压缩消息体阈值，即大于4k的消息体将默认压缩。
+    max-message-size: 4194304 #允许的最大消息大小（字节）。
+    retry-times-when-send-async-failed: 0 #在异步模式下声明发送失败之前内部执行的最大重试次数
+    retry-next-server: true #指示是否在内部发送故障时重试另一个nameServer。
+    retry-times-when-send-failed: 2 #在同步模式下声明发送失败之前内部执行的最大重试次数。
+
+# Swagger配置
+swagger:
+  # 是否开启swagger
+  enabled: true
+  # 请求前缀
+  pathMapping: /admin-api
+
+# 防止XSS攻击
+xss:
+  # 过滤开关
+  enabled: true
+  # 排除链接（多个用逗号分隔）
+  excludes: /system/notice,/system/help
+  # 匹配链接
+  urlPatterns: /system/*,/monitor/*,/tool/*
