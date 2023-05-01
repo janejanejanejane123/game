@@ -3,7 +3,7 @@ ruoyi:
   # 名称
   name: RuoYi
   # 版本
-  version: 3.8.5
+  version: 3.8.3
   # 版权年份
   copyrightYear: 2022
   # 实例演示开关
@@ -206,7 +206,7 @@ rsa:
   charset: UTF-8
 
 # MyBatis配置
-mybatis-plus:
+mybatis:
     # 搜索指定包别名
     typeAliasesPackage: com.ruoyi.**.domain
     # 配置mapper的扫描，找到所有的mapper.xml映射文件
