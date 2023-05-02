@@ -32,23 +32,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * 加解密工具
  */
 public class Encrypt {
-
-    public static String getRandomString(int length) {
-        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        Random random = new Random();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < length; i++) {
-            int number = random.nextInt(str.length());
-            sb.append(str.charAt(number));
-        }
-        return sb.toString();
-    }
 
 
     public static byte[] encryptECB(byte[] data, byte[] key) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
@@ -57,6 +45,8 @@ public class Encrypt {
         byte[] result = cipher.doFinal(data);
         return result;
     }
+
+
 
 
     /**
@@ -112,9 +102,11 @@ public class Encrypt {
     }
 
 
+
+
     /**
-     * 幸运棋牌
-     * AES加密
+     *幸运棋牌
+     *  AES加密
      *
      * @param
      * @return
