@@ -1,25 +1,22 @@
 package com.ruoyi.web.controller.system;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-
-import com.ruoyi.common.constant.UserConstants;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.autoId.SnowflakeIdUtils;
-import com.ruoyi.common.utils.ip.old.OldIpUtils;
-import com.ruoyi.framework.security.filter.DomainFilter;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.autoId.SnowflakeIdUtils;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.SysWebsite;
 import com.ruoyi.system.service.ISysWebsiteService;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 网站管理Controller
@@ -138,27 +135,27 @@ public class SysWebsiteController extends BaseController
         return toAjax(sysWebsiteService.changeStatus(sysWebsite));
     }
 
-    /**
-     * 获取网站信息(允许匿名访问).
-     */
-    @GetMapping("/getSysWebsiteFTP")
-    public AjaxResult getSysWebsiteFTP(SysWebsite sysWebsite)
-    {
-        String siteCode = DomainFilter.getSiteCode();
-        sysWebsite.setSiteCode(siteCode);
-        SysWebsite info = sysWebsiteService.getSysWebsite(sysWebsite);
-        return AjaxResult.success(info);
-    }
-
-    /**
-     * 获取网站信息.
-     */
-    @GetMapping("/getSysWebsite")
-    public AjaxResult getSysWebsite(SysWebsite sysWebsite)
-    {
-        String siteCode = DomainFilter.getSiteCode();
-        sysWebsite.setSiteCode(siteCode);
-        SysWebsite info = sysWebsiteService.getSysWebsite(sysWebsite);
-        return AjaxResult.success(info);
-    }
+//    /**
+//     * 获取网站信息(允许匿名访问).
+//     */
+//    @GetMapping("/getSysWebsiteFTP")
+//    public AjaxResult getSysWebsiteFTP(SysWebsite sysWebsite)
+//    {
+//        String siteCode = DomainFilter.getSiteCode();
+//        sysWebsite.setSiteCode(siteCode);
+//        SysWebsite info = sysWebsiteService.getSysWebsite(sysWebsite);
+//        return AjaxResult.success(info);
+//    }
+//
+//    /**
+//     * 获取网站信息.
+//     */
+//    @GetMapping("/getSysWebsite")
+//    public AjaxResult getSysWebsite(SysWebsite sysWebsite)
+//    {
+//        String siteCode = DomainFilter.getSiteCode();
+//        sysWebsite.setSiteCode(siteCode);
+//        SysWebsite info = sysWebsiteService.getSysWebsite(sysWebsite);
+//        return AjaxResult.success(info);
+//    }
 }

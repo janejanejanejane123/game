@@ -5,17 +5,13 @@ import com.ruoyi.common.sensitive.service.SensitiveWordService;
 import com.ruoyi.common.serializer.ByteRedisSerializer;
 import com.ruoyi.common.utils.autoId.SnowflakeIdUtils;
 import com.ruoyi.framework.config.properties.PermitAllUrlProperties;
-import com.ruoyi.framework.security.filter.DomainFilter;
 import com.ruoyi.framework.security.filter.DomainGetter;
 import com.ruoyi.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.ruoyi.framework.security.handle.AuthenticationEntryPointImpl;
 import com.ruoyi.framework.security.handle.LogoutSuccessHandlerImpl;
-import com.ruoyi.settings.domain.DomainManage;
 import com.ruoyi.settings.service.IDomainManageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.Ordered;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -34,7 +30,6 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.filter.CorsFilter;
 
 import javax.annotation.Resource;
-import javax.servlet.DispatcherType;
 
 /**
  * spring security配置

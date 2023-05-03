@@ -8,6 +8,7 @@ import com.ruoyi.game.domain.request.LoginRequest;
 import com.ruoyi.game.domain.response.BetResponse;
 import com.ruoyi.game.domain.response.BetsTakeEffectResponse;
 import com.ruoyi.game.domain.response.ChangeBetMoneyResponse;
+import com.ruoyi.game.service.IAccountService;
 import com.ruoyi.game.service.IForeignSesrvice;
 import com.ruoyi.game.service.IGameConfigService;
 import com.ruoyi.game.service.IGameUserService;
@@ -31,6 +32,9 @@ public class ForeignServiceImpl implements IForeignSesrvice {
 
     @Autowired
     private IGameUserService iGameUserService;
+
+    @Autowired
+    private IAccountService iAccountService;
 
     @Override
     public AjaxResult channelHandle(LoginRequest loginRequest, HttpServletRequest httpServletRequest) throws Exception {
