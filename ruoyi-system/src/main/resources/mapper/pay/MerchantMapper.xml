@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.pay.mapper.MerchantMapper">
+
+    <resultMap type="com.ruoyi.pay.domain.Merchant" id="MerchantResult">
+        <result property="id"    column="id"    />
+        <result property="merNo"    column="mer_no"    />
+        <result property="state"    column="state"    />
+        <result property="uid"    column="uid"    />
+        <result property="pubKey"    column="pub_key"    />
+        <result property="priKey"    column="pri_key"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateName"    column="update_name"    />
+        <result property="ip"    column="ip"    />
+        <result property="seqNo"    column="seq_no"    />
+    </resultMap>
+
+    <sql id="selectMerchantVo">
+        select id, mer_no, state, uid, pub_key, pri_key, create_time, update_time, update_name, ip,seq_no from t_merchant
+    </sql>
+
+    <select id="selectMerchantList" parameterType="com.ruoyi.pay.domain.Merchant" resultMap="MerchantResult">
+        <include refid="selectMerchantVo"/>
+        <where>
+            <if test="merNo != null  and merNo != ''"> and mer_no = #{merNo}</if>
+            <if test="state != null "> and state = #{state}</if>
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="pubKey != null  and pubKey != ''"> and pub_key = #{pubKey}</if>
+            <if test="priKey != null  and priKey != ''"> and pri_key = #{priKey}</if>
+            <if test="updateName != null  and updateName != ''"> and update_name like concat('%', #{updateName}, '%')</if>
+            <if test="ip != null  and ip != ''"> and ip = #{ip}</if>
+            <if test="seqNo != null  and seqNo != ''"> and seq_no = #{seqNo}</if>
+        </where>
+    </select>
+
+    <select id="selectMerchantById" parameterType="Long" resultMap="MerchantResult">
+        <include refid="selectMerchantVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertMerchant" parameterType="com.ruoyi.pay.domain.Merchant">
+        insert into t_merchant
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="merNo != null and merNo != ''">mer_no,</if>
+            <if test="state != null">state,</if>
+            <if test="uid != null">uid,</if>
+            <if test="pubKey != null and pubKey != ''">pub_key,</if>
+            <if test="priKey != null and priKey != ''">pri_key,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateName != null and updateName != ''">update_name,</if>
+            <if test="ip != null">ip,</if>
+            <if test="seqNo != null  and seqNo != ''">  seq_no,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="merNo != null and merNo != ''">#{merNo},</if>
+            <if test="state != null">#{state},</if>
+            <if test="uid != null">#{uid},</if>
+            <if test="pubKey != null and pubKey != ''">#{pubKey},</if>
+            <if test="priKey != null and priKey != ''">#{priKey},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateName != null and updateName != ''">#{updateName},</if>
+            <if test="ip != null">#{ip},</if>
+            <if test="seqNo != null  and seqNo != ''"> #{seqNo}</if>
+        </trim>
+    </insert>
+
+    <update id="updateMerchant" parameterType="com.ruoyi.pay.domain.Merchant">
+        update t_merchant
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="merNo != null and merNo != ''">mer_no = #{merNo},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="uid != null">uid = #{uid},</if>
+            <if test="pubKey != null and pubKey != ''">pub_key = #{pubKey},</if>
+            <if test="priKey != null and priKey != ''">pri_key = #{priKey},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateName != null and updateName != ''">update_name = #{updateName},</if>
+            <if test="ip != null">ip = #{ip},</if>
+            <if test="seqNo != null  and seqNo != ''">  seq_no = #{seqNo},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateMerchantByUid" parameterType="com.ruoyi.pay.domain.Merchant">
+        update t_merchant
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="state != null">state = #{state},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateName != null and updateName != ''">update_name = #{updateName},</if>
+        </trim>
+        where uid = #{uid}
+    </update>
+
+    <delete id="deleteMerchantById" parameterType="Long">
+        delete from t_merchant where id = #{id}
+    </delete>
+
+    <delete id="deleteMerchantByIds" parameterType="String">
+        delete from t_merchant where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <!--自己写的-->
+    <select id="selectMerchantByMerNo" parameterType="String" resultMap="MerchantResult">
+        <include refid="selectMerchantVo"/>
+        where mer_no = #{merNo}
+    </select>
+
+
+</mapper>

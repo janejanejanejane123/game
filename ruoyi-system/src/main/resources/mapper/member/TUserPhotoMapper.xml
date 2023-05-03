@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.member.mapper.TUserPhotoMapper">
+    
+    <resultMap type="com.ruoyi.member.domain.TUserPhoto" id="TUserPhotoResult">
+        <result property="id"    column="id"    />
+        <result property="src"    column="src"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="addAdmin"    column="add_admin"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectTUserPhotoVo">
+        select id, src, add_time, add_admin, status from t_user_photo
+    </sql>
+
+    <select id="selectTUserPhotoList" parameterType="com.ruoyi.member.domain.TUserPhoto" resultMap="TUserPhotoResult">
+        <include refid="selectTUserPhotoVo"/>
+        <where>  
+            <if test="src != null  and src != ''"> and src = #{src}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="addAdmin != null  and addAdmin != ''"> and add_admin = #{addAdmin}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectTUserPhotoById" parameterType="java.lang.Long" resultMap="TUserPhotoResult">
+        <include refid="selectTUserPhotoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTUserPhoto" parameterType="com.ruoyi.member.domain.TUserPhoto">
+        insert into t_user_photo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="src != null and src != ''">src,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="addAdmin != null and addAdmin != ''">add_admin,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="src != null and src != ''">#{src},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="addAdmin != null and addAdmin != ''">#{addAdmin},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTUserPhoto" parameterType="com.ruoyi.member.domain.TUserPhoto">
+        update t_user_photo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="src != null and src != ''">src = #{src},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="addAdmin != null and addAdmin != ''">add_admin = #{addAdmin},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTUserPhotoById" parameterType="java.lang.Long">
+        delete from t_user_photo where id = #{id}
+    </delete>
+
+    <delete id="deleteTUserPhotoByIds" parameterType="java.lang.String">
+        delete from t_user_photo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

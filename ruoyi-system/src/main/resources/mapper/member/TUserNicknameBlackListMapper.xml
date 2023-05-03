@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.member.mapper.TUserNicknameBlackListMapper">
+    
+    <resultMap type="com.ruoyi.member.domain.TUserNicknameBlackList" id="TUserNicknameBlackListResult">
+        <result property="id"    column="id"    />
+        <result property="uid"    column="uid"    />
+        <result property="username"    column="username"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="addAdmin"    column="add_admin"    />
+        <result property="comment"    column="comment"    />
+    </resultMap>
+
+    <sql id="selectTUserNicknameBlackListVo">
+        select id, uid, username, nickname, add_time, add_admin, comment from t_user_nickname_black_list
+    </sql>
+
+    <select id="selectTUserNicknameBlackListList" parameterType="com.ruoyi.member.domain.TUserNicknameBlackList" resultMap="TUserNicknameBlackListResult">
+        <include refid="selectTUserNicknameBlackListVo"/>
+        <where>  
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="nickname != null  and nickname != ''"> and nickname like concat('%', #{nickname}, '%')</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="addAdmin != null  and addAdmin != ''"> and add_admin = #{addAdmin}</if>
+            <if test="comment != null  and comment != ''"> and comment = #{comment}</if>
+        </where>
+    </select>
+    
+    <select id="selectTUserNicknameBlackListById" parameterType="java.lang.Long" resultMap="TUserNicknameBlackListResult">
+        <include refid="selectTUserNicknameBlackListVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTUserNicknameBlackList" parameterType="com.ruoyi.member.domain.TUserNicknameBlackList">
+        insert into t_user_nickname_black_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="uid != null">uid,</if>
+            <if test="username != null and username != ''">username,</if>
+            <if test="nickname != null and nickname != ''">nickname,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="addAdmin != null and addAdmin != ''">add_admin,</if>
+            <if test="comment != null and comment != ''">comment,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="uid != null">#{uid},</if>
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="nickname != null and nickname != ''">#{nickname},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="addAdmin != null and addAdmin != ''">#{addAdmin},</if>
+            <if test="comment != null and comment != ''">#{comment},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTUserNicknameBlackList" parameterType="com.ruoyi.member.domain.TUserNicknameBlackList">
+        update t_user_nickname_black_list
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null">uid = #{uid},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="nickname != null and nickname != ''">nickname = #{nickname},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="addAdmin != null and addAdmin != ''">add_admin = #{addAdmin},</if>
+            <if test="comment != null and comment != ''">comment = #{comment},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTUserNicknameBlackListById" parameterType="java.lang.Long">
+        delete from t_user_nickname_black_list where id = #{id}
+    </delete>
+
+    <delete id="deleteTUserNicknameBlackListByIds" parameterType="java.lang.String">
+        delete from t_user_nickname_black_list where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="count" resultType="java.lang.Long" parameterType="java.lang.Long">
+        select count(1) from t_user_nickname_black_list where uid=#{userId}
+
+    </select>
+</mapper>

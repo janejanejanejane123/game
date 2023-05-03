@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.settings.mapper.SysAgencyBackwaterMapper">
+    
+    <resultMap type="SysAgencyBackwater" id="SysAgencyBackwaterResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="feeType"    column="fee_type"    />
+        <result property="rate"    column="rate"    />
+        <result property="superiorId"    column="superior_id"    />
+        <result property="superiorName"    column="superior_name"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysAgencyBackwaterVo">
+        select id, user_id, user_name, fee_type, rate, superior_id, superior_name, create_by, create_time, update_by, update_time, remark from sys_agency_backwater
+    </sql>
+
+    <select id="selectSysAgencyBackwaterList" parameterType="SysAgencyBackwater" resultMap="SysAgencyBackwaterResult">
+        <include refid="selectSysAgencyBackwaterVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="feeType != null  and feeType != ''"> and fee_type = #{feeType}</if>
+            <if test="rate != null "> and rate = #{rate}</if>
+            <if test="superiorId != null "> and superior_id = #{superiorId}</if>
+            <if test="superiorName != null  and superiorName != ''"> and superior_name like concat('%', #{superiorName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectSysAgencyBackwaterById" parameterType="Long" resultMap="SysAgencyBackwaterResult">
+        <include refid="selectSysAgencyBackwaterVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysAgencyBackwater" parameterType="SysAgencyBackwater" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_agency_backwater
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="feeType != null and feeType != ''">fee_type,</if>
+            <if test="rate != null">rate,</if>
+            <if test="superiorId != null">superior_id,</if>
+            <if test="superiorName != null">superior_name,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="feeType != null and feeType != ''">#{feeType},</if>
+            <if test="rate != null">#{rate},</if>
+            <if test="superiorId != null">#{superiorId},</if>
+            <if test="superiorName != null">#{superiorName},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysAgencyBackwater" parameterType="SysAgencyBackwater">
+        update sys_agency_backwater
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="feeType != null and feeType != ''">fee_type = #{feeType},</if>
+            <if test="rate != null">rate = #{rate},</if>
+            <if test="superiorId != null">superior_id = #{superiorId},</if>
+            <if test="superiorName != null">superior_name = #{superiorName},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysAgencyBackwaterById" parameterType="Long">
+        delete from sys_agency_backwater where id = #{id}
+    </delete>
+
+    <delete id="deleteSysAgencyBackwaterByIds" parameterType="String">
+        delete from sys_agency_backwater where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--检测该代理该类型是否唯一-->
+    <select id="checkFeeTypeToAgencyUnique" parameterType="SysAgencyBackwater" resultMap="SysAgencyBackwaterResult">
+        <include refid="selectSysAgencyBackwaterVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="feeType != null  and feeType != ''"> and fee_type = #{feeType}</if>
+        </where>
+    </select>
+
+    <!--查询代理返水设置-->
+    <select id="getAgencyBackwater" parameterType="SysAgencyBackwater" resultMap="SysAgencyBackwaterResult">
+        <include refid="selectSysAgencyBackwaterVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="feeType != null  and feeType != ''"> and fee_type = #{feeType}</if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.order.mapper.UserOrderDetailMapper">
+    
+    <resultMap type="com.ruoyi.order.domain.UserOrderDetail" id="UserOrderDetailResult">
+        <result property="primaryId"    column="primary_id"    />
+        <result property="referId"    column="refer_id"    />
+        <result property="salerId"    column="saler_id"    />
+        <result property="salerName"    column="saler_name"    />
+        <result property="saleAmout"    column="sale_amout"    />
+        <result property="salerCardName"    column="saler_card_name"    />
+        <result property="salerCardAddress"    column="saler_card_address"    />
+        <result property="salerCardRemark"    column="saler_card_remark"    />
+        <result property="salerRemark"    column="saler_remark"    />
+        <result property="buyerCardName"    column="buyer_card_name"    />
+        <result property="buyerCardAddress"    column="buyer_card_address"    />
+        <result property="buyerCardRemark"    column="buyer_card_remark"    />
+        <result property="buyerRemark"    column="buyer_remark"    />
+        <result property="payWayId"    column="pay_way_id"    />
+        <result property="payStatus"    column="pay_status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="salerCheckTime"    column="saler_check_time"    />
+        <result property="buyerPayTime"    column="buyer_pay_time"    />
+        <result property="salerConfirmTime"    column="saler_confirm_time"    />
+        <result property="salerPauseTime"    column="saler_pause_time"    />
+        <result property="orderFinishTime"    column="order_finish_time"    />
+        <result property="successImg"    column="success_img"    />
+        <result property="pauseImg"    column="pause_img"    />
+        <result property="buyerId"    column="buyer_id"    />
+        <result property="buyerName"    column="buyer_name"    />
+        <result property="orderCancelTime"    column="order_cancel_time"    />
+        <result property="operateName"    column="operate_name"    />
+        <result property="buyRank"    column="buy_rank"    />
+        <result property="saleRank"    column="sale_rank"    />
+    </resultMap>
+
+    <sql id="selectUserOrderDetailVo">
+        select primary_id, refer_id, saler_id, saler_name, sale_amout, saler_card_name, saler_card_address, saler_card_remark, saler_remark, buyer_card_name, buyer_card_address, buyer_card_remark, buyer_remark, pay_way_id, pay_status, create_time, saler_check_time, buyer_pay_time, saler_confirm_time, saler_pause_time, order_finish_time, success_img, pause_img, buyer_id, buyer_name, order_cancel_time, operate_name,buy_rank,sale_rank from t_user_order_detail
+    </sql>
+
+    <select id="selectMyBuyOrder" resultMap="UserOrderDetailResult">
+        select * from t_user_order_detail where buyer_id = #{uid,jdbcType=BIGINT} or saler_id = #{uid,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectUserList" parameterType="com.ruoyi.order.domain.UserOrderDetail" resultMap="UserOrderDetailResult">
+        <include refid="selectUserOrderDetailVo"/>
+        <where>
+            <if test="primaryId != null  and primaryId != ''"> and primary_id = #{primaryId}</if>
+            <if test="referId != null  and referId != ''"> and refer_id = #{referId}</if>
+            <if test="salerId != null "> and saler_id = #{salerId}</if>
+            <if test="salerName != null  and salerName != ''"> and saler_name like concat('%', #{salerName}, '%')</if>
+            <if test="saleAmout != null "> and sale_amout = #{saleAmout}</if>
+            <if test="salerCardName != null  and salerCardName != ''"> and saler_card_name like concat('%', #{salerCardName}, '%')</if>
+            <if test="salerCardAddress != null  and salerCardAddress != ''"> and saler_card_address = #{salerCardAddress}</if>
+            <if test="salerCardRemark != null  and salerCardRemark != ''"> and saler_card_remark = #{salerCardRemark}</if>
+            <if test="salerRemark != null  and salerRemark != ''"> and saler_remark = #{salerRemark}</if>
+            <if test="buyerCardName != null  and buyerCardName != ''"> and buyer_card_name like concat('%', #{buyerCardName}, '%')</if>
+            <if test="buyerCardAddress != null  and buyerCardAddress != ''"> and buyer_card_address = #{buyerCardAddress}</if>
+            <if test="buyerCardRemark != null  and buyerCardRemark != ''"> and buyer_card_remark = #{buyerCardRemark}</if>
+            <if test="buyerRemark != null  and buyerRemark != ''"> and buyer_remark = #{buyerRemark}</if>
+            <if test="payWayId != null "> and pay_way_id = #{payWayId}</if>
+            <if test="payStatus != null "> and pay_status = #{payStatus}</if>
+            <if test="createTime != null "> and create_time &gt;= #{createTime}</if>
+            <if test="salerCheckTime != null "> and saler_check_time = #{salerCheckTime}</if>
+            <if test="buyerPayTime != null "> and buyer_pay_time = #{buyerPayTime}</if>
+            <if test="salerConfirmTime != null "> and saler_confirm_time = #{salerConfirmTime}</if>
+            <if test="salerPauseTime != null "> and saler_pause_time = #{salerPauseTime}</if>
+            <if test="orderFinishTime != null "> and order_finish_time = #{orderFinishTime}</if>
+            <if test="successImg != null  and successImg != ''"> and success_img = #{successImg}</if>
+            <if test="pauseImg != null  and pauseImg != ''"> and pause_img = #{pauseImg}</if>
+            <if test="buyerId != null "> and buyer_id = #{buyerId}</if>
+            <if test="buyerName != null  and buyerName != ''"> and buyer_name like concat('%', #{buyerName}, '%')</if>
+            <if test="orderCancelTime != null "> and order_cancel_time = #{orderCancelTime}</if>
+            <if test="orderCancelTime != null "> and order_cancel_time = #{orderCancelTime}</if>
+            <if test='operateName != null  and operateName == "M"'> and left(primary_id,5) = 'EPAYM'</if>
+            <if test='operateName != null  and operateName == "B"'> and left(primary_id,5) = 'EPAYB'</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectUserOrderDetailByPrimaryId" parameterType="String" resultMap="UserOrderDetailResult">
+        <include refid="selectUserOrderDetailVo"/>
+        where primary_id = #{primaryId}
+    </select>
+
+    <insert id="insertUserOrderDetail" parameterType="com.ruoyi.order.domain.UserOrderDetail">
+        insert into t_user_order_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="primaryId != null">primary_id,</if>
+            <if test="referId != null">refer_id,</if>
+            <if test="salerId != null">saler_id,</if>
+            <if test="salerName != null">saler_name,</if>
+            <if test="saleAmout != null">sale_amout,</if>
+            <if test="salerCardName != null">saler_card_name,</if>
+            <if test="salerCardAddress != null">saler_card_address,</if>
+            <if test="salerCardRemark != null">saler_card_remark,</if>
+            <if test="salerRemark != null">saler_remark,</if>
+            <if test="buyerCardName != null">buyer_card_name,</if>
+            <if test="buyerCardAddress != null">buyer_card_address,</if>
+            <if test="buyerCardRemark != null">buyer_card_remark,</if>
+            <if test="buyerRemark != null">buyer_remark,</if>
+            <if test="payWayId != null">pay_way_id,</if>
+            <if test="payStatus != null">pay_status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="salerCheckTime != null">saler_check_time,</if>
+            <if test="buyerPayTime != null">buyer_pay_time,</if>
+            <if test="salerConfirmTime != null">saler_confirm_time,</if>
+            <if test="salerPauseTime != null">saler_pause_time,</if>
+            <if test="orderFinishTime != null">order_finish_time,</if>
+            <if test="successImg != null">success_img,</if>
+            <if test="pauseImg != null">pause_img,</if>
+            <if test="buyerId != null">buyer_id,</if>
+            <if test="buyerName != null">buyer_name,</if>
+            <if test="orderCancelTime != null">order_cancel_time,</if>
+            <if test="operateName != null">operate_name,</if>
+            <if test="buyRank != null">buy_rank,</if>
+            <if test="saleRank != null">sale_rank,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="primaryId != null">#{primaryId},</if>
+            <if test="referId != null">#{referId},</if>
+            <if test="salerId != null">#{salerId},</if>
+            <if test="salerName != null">#{salerName},</if>
+            <if test="saleAmout != null">#{saleAmout},</if>
+            <if test="salerCardName != null">#{salerCardName},</if>
+            <if test="salerCardAddress != null">#{salerCardAddress},</if>
+            <if test="salerCardRemark != null">#{salerCardRemark},</if>
+            <if test="salerRemark != null">#{salerRemark},</if>
+            <if test="buyerCardName != null">#{buyerCardName},</if>
+            <if test="buyerCardAddress != null">#{buyerCardAddress},</if>
+            <if test="buyerCardRemark != null">#{buyerCardRemark},</if>
+            <if test="buyerRemark != null">#{buyerRemark},</if>
+            <if test="payWayId != null">#{payWayId},</if>
+            <if test="payStatus != null">#{payStatus},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="salerCheckTime != null">#{salerCheckTime},</if>
+            <if test="buyerPayTime != null">#{buyerPayTime},</if>
+            <if test="salerConfirmTime != null">#{salerConfirmTime},</if>
+            <if test="salerPauseTime != null">#{salerPauseTime},</if>
+            <if test="orderFinishTime != null">#{orderFinishTime},</if>
+            <if test="successImg != null">#{successImg},</if>
+            <if test="pauseImg != null">#{pauseImg},</if>
+            <if test="buyerId != null">#{buyerId},</if>
+            <if test="buyerName != null">#{buyerName},</if>
+            <if test="orderCancelTime != null">#{orderCancelTime},</if>
+            <if test="operateName != null">#{operateName},</if>
+            <if test="buyRank != null">#{buyRank},</if>
+            <if test="saleRank != null">#{saleRank},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserOrderDetail" parameterType="com.ruoyi.order.domain.UserOrderDetail">
+        update t_user_order_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="referId != null">refer_id = #{referId},</if>
+            <if test="salerId != null">saler_id = #{salerId},</if>
+            <if test="salerName != null">saler_name = #{salerName},</if>
+            <if test="saleAmout != null">sale_amout = #{saleAmout},</if>
+            <if test="salerCardName != null">saler_card_name = #{salerCardName},</if>
+            <if test="salerCardAddress != null">saler_card_address = #{salerCardAddress},</if>
+            <if test="salerCardRemark != null">saler_card_remark = #{salerCardRemark},</if>
+            <if test="salerRemark != null">saler_remark = #{salerRemark},</if>
+            <if test="buyerCardName != null">buyer_card_name = #{buyerCardName},</if>
+            <if test="buyerCardAddress != null">buyer_card_address = #{buyerCardAddress},</if>
+            <if test="buyerCardRemark != null">buyer_card_remark = #{buyerCardRemark},</if>
+            <if test="buyerRemark != null">buyer_remark = #{buyerRemark},</if>
+            <if test="payWayId != null">pay_way_id = #{payWayId},</if>
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="salerCheckTime != null">saler_check_time = #{salerCheckTime},</if>
+            <if test="buyerPayTime != null">buyer_pay_time = #{buyerPayTime},</if>
+            <if test="salerConfirmTime != null">saler_confirm_time = #{salerConfirmTime},</if>
+            <if test="salerPauseTime != null">saler_pause_time = #{salerPauseTime},</if>
+            <if test="orderFinishTime != null">order_finish_time = #{orderFinishTime},</if>
+            <if test="successImg != null">success_img = #{successImg},</if>
+            <if test="pauseImg != null">pause_img = #{pauseImg},</if>
+            <if test="buyerId != null">buyer_id = #{buyerId},</if>
+            <if test="buyerName != null">buyer_name = #{buyerName},</if>
+            <if test="orderCancelTime != null">order_cancel_time = #{orderCancelTime},</if>
+            <if test="operateName != null">operate_name = #{operateName},</if>
+            <if test="buyRank != null">buy_rank = #{buyRank},</if>
+            <if test="saleRank != null">sale_rank = #{saleRank},</if>
+        </trim>
+        where primary_id = #{primaryId}
+    </update>
+
+    <update id="updateStatus" parameterType="com.ruoyi.order.domain.UserOrderDetail">
+        update t_user_order_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="salerCheckTime != null">saler_check_time = #{salerCheckTime},</if>
+            <if test="buyerPayTime != null">buyer_pay_time = #{buyerPayTime},</if>
+            <if test="salerConfirmTime != null">saler_confirm_time = #{salerConfirmTime},</if>
+            <if test="salerPauseTime != null">saler_pause_time = #{salerPauseTime},</if>
+            <if test="orderFinishTime != null">order_finish_time = #{orderFinishTime},</if>
+            <if test="successImg != null">success_img = #{successImg},</if>
+            <if test="pauseImg != null">pause_img = #{pauseImg},</if>
+            <if test="orderCancelTime != null">order_cancel_time = #{orderCancelTime},</if>
+            <if test="operateName != null">operate_name = #{operateName},</if>
+        </trim>
+        where primary_id = #{primaryId} and pay_status = #{payWayId}
+    </update>
+
+
+    <update id="cancelOrderByAdmin" parameterType="com.ruoyi.order.domain.UserOrderDetail">
+        update t_user_order_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="salerCheckTime != null">saler_check_time = #{salerCheckTime},</if>
+            <if test="buyerPayTime != null">buyer_pay_time = #{buyerPayTime},</if>
+            <if test="salerConfirmTime != null">saler_confirm_time = #{salerConfirmTime},</if>
+            <if test="salerPauseTime != null">saler_pause_time = #{salerPauseTime},</if>
+            <if test="orderFinishTime != null">order_finish_time = #{orderFinishTime},</if>
+            <if test="successImg != null">success_img = #{successImg},</if>
+            <if test="pauseImg != null">pause_img = #{pauseImg},</if>
+            <if test="orderCancelTime != null">order_cancel_time = #{orderCancelTime},</if>
+            <if test="operateName != null">operate_name = #{operateName},</if>
+        </trim>
+        where primary_id = #{primaryId} and pay_status in (1,2,3,5)
+    </update>
+
+    <update id="sendBalanceByAdmin" parameterType="com.ruoyi.order.domain.UserOrderDetail">
+        update t_user_order_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="salerConfirmTime != null">saler_confirm_time = #{salerConfirmTime},</if>
+            <if test="orderFinishTime != null">order_finish_time = #{orderFinishTime},</if>
+            <if test="operateName != null">operate_name = #{operateName},</if>
+        </trim>
+        where primary_id = #{primaryId} and pay_status in (2,3,5) and success_img is not null
+    </update>
+
+    <update id="reloadSuccessStatus">
+        update t_user_order_detail
+        set success_img = '-1'
+        where primary_id = #{primaryId} and pay_status in ('3','5')
+    </update>
+
+    <update id="reloadPauseStatus">
+        update t_user_order_detail
+        set pause_img = '-1'
+        where primary_id = #{primaryId} and pay_status = '5'
+    </update>
+
+    <update id="delSuccessImg">
+        update t_user_order_detail
+        set success_img = null
+        where primary_id = #{primaryId}
+    </update>
+
+    <update id="delPauseImg">
+        update t_user_order_detail
+        set pause_img = null
+        where primary_id = #{primaryId}
+    </update>
+
+    <select id="queryUnPaidOrderByUid" resultType="decimal">
+        select sum(sale_amout) from t_user_order_detail where buyer_id = #{userId} and pay_status in (1,2,3,5);
+    </select>
+
+    <delete id="deleteUserOrderDetailByPrimaryId" parameterType="String">
+        delete from t_user_order_detail where primary_id = #{primaryId}
+    </delete>
+
+    <delete id="deleteUserOrderDetailByPrimaryIds" parameterType="String">
+        delete from t_user_order_detail where primary_id in 
+        <foreach item="primaryId" collection="array" open="(" separator="," close=")">
+            #{primaryId}
+        </foreach>
+    </delete>
+</mapper>

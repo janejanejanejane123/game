@@ -4,6 +4,7 @@ import com.ruoyi.common.core.domain.model.LoginMember;
 import com.ruoyi.common.core.domain.model.member.TUser;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.MessageUtils;
+import com.ruoyi.system.service.IMemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 
 /**
  * @param
@@ -22,11 +24,14 @@ import org.springframework.stereotype.Service;
 public class MemberDetailServiceImpl implements UserDetailsService {
     private static final Logger log = LoggerFactory.getLogger(MemberDetailServiceImpl.class);
 
+    @Resource
+    private IMemberService memberService;
+
 
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        TUser tUser = null;
+        TUser tUser = memberService.queryMemberByUsername(username);
         if (tUser==null){
             throw new ServiceException(MessageUtils.message("member.login.unknownUsername"));
         }

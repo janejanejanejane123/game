@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.member.mapper.TUserInfoApplyMapper">
+
+    <resultMap type="com.ruoyi.member.domain.TUserInfoApply" id="TUserInfoApplyResult">
+        <result property="id"    column="id"    />
+        <result property="uid"    column="uid"    />
+        <result property="username"    column="username"    />
+        <result property="content"    column="content"    />
+        <result property="type"    column="type"    />
+        <result property="appTime"    column="app_time"    />
+        <result property="upTime"    column="up_time"    />
+        <result property="upSysUsername"    column="up_sys_username"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectTUserInfoApplyVo">
+        select id, uid, username, content, type, app_time, up_time, up_sys_username,status from t_user_info_apply
+    </sql>
+
+
+    <sql id="whereCause">
+        <where>
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="username != null  and username != ''"> and username= #{username}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="appTime != null "> and app_time = #{appTime}</if>
+            <if test="upTime != null "> and up_time = #{upTime}</if>
+            <if test="upSysUsername != null  and upSysUsername != ''"> and up_sys_username = #{upSysUsername}</if>
+        </where>
+    </sql>
+
+    <select id="selectTUserInfoApplyList" parameterType="com.ruoyi.member.domain.TUserInfoApply" resultMap="TUserInfoApplyResult">
+        <include refid="selectTUserInfoApplyVo"/>
+        <where>  
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="appTime != null "> and app_time = #{appTime}</if>
+            <if test="upTime != null "> and up_time = #{upTime}</if>
+            <if test="upSysUsername != null  and upSysUsername != ''"> and up_sys_username = #{upSysUsername}</if>
+        </where>
+        <if test="status != 0">
+            order by app_time desc
+        </if>
+    </select>
+    
+    <select id="selectTUserInfoApplyById" parameterType="java.lang.Long" resultMap="TUserInfoApplyResult">
+        <include refid="selectTUserInfoApplyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTUserInfoApply" parameterType="com.ruoyi.member.domain.TUserInfoApply">
+        insert into t_user_info_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="uid != null">uid,</if>
+            <if test="username != null and username != ''">username,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="type != null">type,</if>
+            <if test="appTime != null">app_time,</if>
+            <if test="upTime != null">up_time,</if>
+            <if test="upSysUsername != null">up_sys_username,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="uid != null">#{uid},</if>
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="type != null">#{type},</if>
+            <if test="appTime != null">#{appTime},</if>
+            <if test="upTime != null">#{upTime},</if>
+            <if test="upSysUsername != null">#{upSysUsername},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTUserInfoApply" parameterType="com.ruoyi.member.domain.TUserInfoApply">
+        update t_user_info_apply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null">uid = #{uid},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="appTime != null">app_time = #{appTime},</if>
+            <if test="upTime != null">up_time = #{upTime},</if>
+            <if test="upSysUsername != null">up_sys_username = #{upSysUsername},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id} and status = 0
+    </update>
+
+    <delete id="deleteTUserInfoApplyById" parameterType="java.lang.Long">
+        delete from t_user_info_apply where id = #{id}
+    </delete>
+
+    <delete id="deleteTUserInfoApplyByIds" parameterType="java.lang.String">
+        delete from t_user_info_apply where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="countByCause" parameterType="com.ruoyi.member.domain.TUserInfoApply" resultType="java.lang.Long">
+        select count(1) from t_user_info_apply
+        <include refid="whereCause"/>
+    </select>
+</mapper>

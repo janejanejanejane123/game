@@ -7,6 +7,9 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.exception.user.CaptchaException;
+import com.ruoyi.common.exception.user.CaptchaExpireException;
+import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.MessageUtils;
 import com.ruoyi.common.utils.ServletUtils;
@@ -25,6 +28,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 登录校验方法
@@ -54,6 +58,7 @@ public class SysLoginService {
      * @param username   用户名
      * @param password   密码
      * @param code       验证码
+     * @param googleCode 谷歌验证码
      * @param uuid       唯一标识
      */
     public void login(String username, String password, String code, Long googleCode, String uuid) {
@@ -66,7 +71,7 @@ public class SysLoginService {
         Authentication authentication = null;
         try {
             RequestContext.setParam("googleCode", googleCode);
-            RequestContext.setParam("userType", Constants.USER_TYPE_SYSTEM_USER);
+            RequestContext.setParam("userType",Constants.USER_TYPE_SYSTEM_USER);
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
             AuthenticationContextHolder.setContext(authenticationToken);

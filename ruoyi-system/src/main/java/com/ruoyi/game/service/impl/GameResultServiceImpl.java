@@ -13,5 +13,5 @@ import org.springframework.stereotype.Service;
  * @date 2023-04-28
  */
 @Service
-public class GameResultServiceImpl extends ServiceImpl<GameResultMapper, GameResult> implements IGameResultService {
+public class  GameResultServiceImpl extends ServiceImpl<GameResultMapper, GameResult> implements IGameResultService {
 }

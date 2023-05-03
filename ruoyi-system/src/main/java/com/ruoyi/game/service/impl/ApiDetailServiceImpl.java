@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.game.domain.ApiDetail;
 import com.ruoyi.game.mapper.ApiDetailMapper;
 import com.ruoyi.game.service.IApiDetailService;
-
 import org.springframework.stereotype.Service;
 
 /**

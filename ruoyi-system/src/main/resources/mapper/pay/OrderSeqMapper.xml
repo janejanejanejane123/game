@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.pay.mapper.OrderSeqMapper">
+
+    <resultMap type="OrderSeq" id="OrderSeqResult">
+        <result property="timestr"    column="timestr"    />
+        <result property="orderSn"    column="order_sn"    />
+    </resultMap>
+
+    <sql id="selectOrderSeqVo">
+        select timestr, order_sn from order_seq
+    </sql>
+
+    <select id="selectOrderSeqList" parameterType="OrderSeq" resultMap="OrderSeqResult">
+        <include refid="selectOrderSeqVo"/>
+        <where>
+            <if test="timestr != null  and timestr != ''"> and timestr = #{timestr}</if>
+            <if test="orderSn != null  and orderSn != ''"> and order_sn = #{orderSn}</if>
+        </where>
+    </select>
+
+    <select id="selectOrderSeqByTimestr" parameterType="String" resultMap="OrderSeqResult">
+        <include refid="selectOrderSeqVo"/>
+        where timestr = #{timestr}
+    </select>
+
+    <insert id="insertOrderSeq" parameterType="OrderSeq">
+        insert into order_seq
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="timestr != null">timestr,</if>
+            <if test="orderSn != null">order_sn,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="timestr != null">#{timestr},</if>
+            <if test="orderSn != null">#{orderSn},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOrderSeq" parameterType="OrderSeq">
+      <!--  update order_seq
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderSn != null">order_sn = #{orderSn},</if>
+        </trim>
+        where timestr = #{timestr}
+-->
+
+        UPDATE order_seq SET order_sn = order_sn + 1 WHERE timestr = #{timestr};
+    </update>
+
+    <delete id="deleteOrderSeqByTimestr" parameterType="String">
+        delete from order_seq where timestr = #{timestr}
+    </delete>
+
+    <delete id="deleteOrderSeqByTimestrs" parameterType="String">
+        delete from order_seq where timestr in
+        <foreach item="timestr" collection="array" open="(" separator="," close=")">
+            #{timestr}
+        </foreach>
+    </delete>
+
+    <select id="selectSeq" resultType="string" parameterType="string" >
+        SELECT CONCAT(1,LPAD(order_sn,4,0)) AS order_sn FROM order_seq WHERE timestr = #{timestr};
+    </select>
+</mapper>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chatroom.mapper.ChatBannedMapper">
+    
+    <resultMap type="ChatBanned" id="ChatBannedResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="expireDate"    column="expire_date"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectChatBannedVo">
+        select id, user_id, user_name, expire_date, create_by, create_time, remark from t_chat_banned
+    </sql>
+
+    <select id="selectChatBannedList" parameterType="ChatBanned" resultMap="ChatBannedResult">
+        <include refid="selectChatBannedVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="expireDate != null "> and expire_date = #{expireDate}</if>
+            <if test="remark != null  and remark != ''"> and remark = #{remark}</if>
+        </where>
+    </select>
+    
+    <select id="selectChatBannedById" parameterType="Long" resultMap="ChatBannedResult">
+        <include refid="selectChatBannedVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertChatBanned" parameterType="ChatBanned">
+        insert into t_chat_banned
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="expireDate != null">expire_date,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="expireDate != null">#{expireDate},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateChatBanned" parameterType="ChatBanned">
+        update t_chat_banned
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="expireDate != null">expire_date = #{expireDate},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteChatBannedById" parameterType="Long">
+        delete from t_chat_banned where id = #{id}
+    </delete>
+
+    <delete id="deleteChatBannedByIds" parameterType="String">
+        delete from t_chat_banned where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--检测禁言是否唯一-->
+    <select id="checkChatBannedUnique" parameterType="ChatBanned" resultMap="ChatBannedResult">
+        <include refid="selectChatBannedVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+</mapper>

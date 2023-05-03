@@ -2,6 +2,7 @@ package com.ruoyi.system.test;
 
 import com.ruoyi.common.utils.RSAUtil;
 import com.ruoyi.common.utils.http.HttpUtil;
+import com.ruoyi.common.utils.http.HttpUtils;
 
 public class Test {
 

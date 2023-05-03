@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.member.mapper.TUserRegisteredApplyMapper">
+    
+    <resultMap type="com.ruoyi.member.domain.TUserRegisteredApply" id="TUserRegisteredApplyResult">
+        <result property="username"    column="username"    />
+        <result property="id"    column="id"    />
+        <result property="password"    column="password"    />
+        <result property="video"    column="video"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="status"    column="status"    />
+        <result property="appTime"    column="app_time"    />
+        <result property="upTime"    column="up_time"    />
+        <result property="upSysUser"    column="up_sys_user"    />
+        <result property="email"    column="email"    />
+        <result property="captchaContent"    column="captcha_content"    />
+        <result property="comments"    column="comments"    />
+        <result property="uid"    column="uid"    />
+    </resultMap>
+
+    <sql id="selectTUserRegisteredApplyVo">
+        select username, id, password, video, id_card,uid,status, app_time, up_time, up_sys_user, email, captcha_content,comments from t_user_registered_apply
+    </sql>
+
+    <select id="selectTUserRegisteredApplyList" parameterType="com.ruoyi.member.domain.TUserRegisteredApply" resultMap="TUserRegisteredApplyResult">
+        <include refid="selectTUserRegisteredApplyVo"/>
+        <where>  
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="video != null  and video != ''"> and video = #{video}</if>
+            <if test="idCard != null  and idCard != ''"> and id_card = #{idCard}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="appTime != null "> and app_time = #{appTime}</if>
+            <if test="upTime != null "> and up_time = #{upTime}</if>
+            <if test="upSysUser != null "> and up_sys_user = #{upSysUser}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="captchaContent != null  and captchaContent != ''"> and captcha_content = #{captchaContent}</if>
+            <if test="comments != null  and comments != ''"> and comments = #{comments}</if>
+            <if test="uid != null "> and uid = #{uid}</if>
+        </where>
+    </select>
+    
+    <select id="selectTUserRegisteredApplyById" parameterType="java.lang.Long" resultMap="TUserRegisteredApplyResult">
+        <include refid="selectTUserRegisteredApplyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTUserRegisteredApply" parameterType="com.ruoyi.member.domain.TUserRegisteredApply">
+        insert into t_user_registered_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">username,</if>
+            <if test="id != null">id,</if>
+            <if test="password != null and password != ''">password,</if>
+            <if test="video != null">video,</if>
+            <if test="idCard != null">id_card,</if>
+            <if test="status != null">status,</if>
+            <if test="appTime != null">app_time,</if>
+            <if test="upTime != null">up_time,</if>
+            <if test="upSysUser != null">up_sys_user,</if>
+            <if test="email != null and email != ''">email,</if>
+            <if test="captchaContent != null and captchaContent != ''">captcha_content,</if>
+            <if test="comments != null and comments != ''">comments,</if>
+            <if test="uid != null ">uid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="id != null">#{id},</if>
+            <if test="password != null and password != ''">#{password},</if>
+            <if test="video != null">#{video},</if>
+            <if test="idCard != null">#{idCard},</if>
+            <if test="status != null">#{status},</if>
+            <if test="appTime != null">#{appTime},</if>
+            <if test="upTime != null">#{upTime},</if>
+            <if test="upSysUser != null">#{upSysUser},</if>
+            <if test="email != null and email != ''">#{email},</if>
+            <if test="captchaContent != null and captchaContent != ''">#{captchaContent},</if>
+            <if test="comments != null and comments != ''">#{comments},</if>
+            <if test="uid != null ">#{uid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTUserRegisteredApply" parameterType="com.ruoyi.member.domain.TUserRegisteredApply">
+        update t_user_registered_apply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="video != null">video = #{video},</if>
+            <if test="idCard != null">id_card = #{idCard},</if>
+            <if test="appTime != null">app_time = #{appTime},</if>
+            <if test="upTime != null">up_time = #{upTime},</if>
+            <if test="upSysUser != null">up_sys_user = #{upSysUser},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="email != null and email != ''">email = #{email},</if>
+            <if test="captchaContent != null and captchaContent != ''">captcha_content = #{captchaContent},</if>
+            <if test="comments != null and comments != ''">comments = #{comments},</if>
+            <if test="uid != null ">uid = #{uid},</if>
+        </trim>
+        where id = #{id} and status = 0
+    </update>
+
+    <delete id="deleteTUserRegisteredApplyById" parameterType="java.lang.Long">
+        delete from t_user_registered_apply where id = #{id}
+    </delete>
+
+    <delete id="deleteTUserRegisteredApplyByIds" parameterType="java.lang.String">
+        delete from t_user_registered_apply where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countByUid" resultType="java.lang.Long" >
+        select count(1) from t_user_registered_apply where uid=#{uid} and status = 0
+    </select>
+</mapper>

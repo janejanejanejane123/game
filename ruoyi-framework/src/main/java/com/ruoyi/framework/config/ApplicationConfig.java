@@ -1,7 +1,10 @@
 package com.ruoyi.framework.config;
 
+import java.util.TimeZone;
+
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.ruoyi.common.cache.LoginCacheHandler;
+import com.ruoyi.common.config.EncryptRequestBodyAdvice;
 import com.ruoyi.common.utils.autoId.SnowflakeIdUtils;
 import com.ruoyi.framework.security.handle.LoginUpdateHandler;
 import com.ruoyi.framework.security.handle.LoginUpdateHandler4Other;
@@ -11,8 +14,6 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-
-import java.util.TimeZone;
 
 /**
  * 程序注解配置
@@ -42,6 +43,15 @@ public class ApplicationConfig
     @Bean
     public SnowflakeIdUtils snowflakeIdUtils(){
         return new SnowflakeIdUtils();
+    }
+
+    /**
+     * 配置请求参数解密
+     * @return
+     */
+    @Bean
+    public EncryptRequestBodyAdvice encryptRequestBodyAdvice() {
+        return new EncryptRequestBodyAdvice();
     }
 
     @Bean

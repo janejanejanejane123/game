@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.pay.mapper.TReportMapper">
+
+    <resultMap type="TReport" id="TReportResult">
+        <result property="id"    column="id"    />
+        <result property="key"    column="key"    />
+        <result property="amount"    column="amount"    />
+        <result property="fee"    column="fee"    />
+        <result property="times"    column="times"    />
+        <result property="period"    column="period"    />
+        <result property="merNo"    column="mer_no"    />
+    </resultMap>
+
+    <sql id="selectTReportVo">
+        select id, `key`, amount, fee, times, period, mer_no from t_report
+    </sql>
+
+    <select id="selectTReportList" parameterType="TReportVo" resultMap="TReportResult">
+        <include refid="selectTReportVo"/>
+        <where>
+            <if test="key != null  and key != ''"> and `key` = #{key}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="fee != null "> and fee = #{fee}</if>
+            <if test="times != null "> and times = #{times}</if>
+            <if test="period != null "> and period = #{period}</if>
+            <if test="merNo != null  and merNo != ''"> and mer_no = #{merNo}</if>
+            <if test="startDate != null  "> and period &gt;= #{startDate}</if>
+            <if test="endDate != null  "> and period &lt; #{endDate}</if>
+        </where>
+        order by  period desc
+    </select>
+
+    <select id="selectTReportById" parameterType="Long" resultMap="TReportResult">
+        <include refid="selectTReportVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTReport" parameterType="TReport">
+        insert into t_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="key != null and key != ''">`key`,</if>
+            <if test="amount != null">amount,</if>
+            <if test="fee != null">fee,</if>
+            <if test="times != null">times,</if>
+            <if test="period != null">period,</if>
+            <if test="merNo != null">mer_no,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="key != null and key != ''">#{key},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="fee != null">#{fee},</if>
+            <if test="times != null">#{times},</if>
+            <if test="period != null">#{period},</if>
+            <if test="merNo != null">#{merNo},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTReport" parameterType="TReport">
+        update t_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="amount != null">amount =amount+ #{amount},</if>
+            <if test="fee != null">fee = fee+ #{fee},</if>
+            <if test="times != null">times = times + 1,</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTReportById" parameterType="Long">
+        delete from t_report where id = #{id}
+    </delete>
+
+    <delete id="deleteTReportByIds" parameterType="String">
+        delete from t_report where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--生成END-->
+    <select id="selectReportSum" resultMap="TReportResult" >
+        select max( `key`) as "key", sum(amount) as amount, sum(fee) as fee , sum(times) as times from t_report
+        <where>
+            <if test="merNo != null  and merNo != ''"> and mer_no = #{merNo}</if>
+        </where>
+        GROUP BY `key`
+    </select>
+
+
+</mapper>

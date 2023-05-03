@@ -1,12 +1,11 @@
 package com.ruoyi.system.service.impl;
 
-import com.ruoyi.system.service.ISysOperLogService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.domain.SysOperLog;
 import com.ruoyi.system.mapper.SysOperLogMapper;
-
-import java.util.List;
+import com.ruoyi.system.service.ISysOperLogService;
 
 /**
  * 操作日志 服务层处理

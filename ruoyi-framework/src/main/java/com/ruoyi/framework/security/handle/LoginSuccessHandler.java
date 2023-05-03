@@ -9,6 +9,7 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.http.HttpUtils;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.member.mapper.TUserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +35,8 @@ public class LoginSuccessHandler implements ApplicationListener<AuthenticationSu
     @Resource
     private TokenService tokenService;
     @Resource
+    private TUserMapper mapper;
+    @Resource
     private HttpServletRequest request;
     @Resource
     private HttpServletResponse response;
@@ -53,13 +56,13 @@ public class LoginSuccessHandler implements ApplicationListener<AuthenticationSu
 
         String token = tokenService.createToken(loginUser);
         //踢人;
-        //AsyncFactory.kickUser(tokenService,false,authentication);
+        AsyncFactory.kickUser(tokenService,false,authentication);
         //返回token
         AjaxResult success = AjaxResult.success();
         success.put(Constants.TOKEN, token);
 
         if (userType.equals(Constants.USER_TYPE_PLAYER)){
-            //AsyncFactory.loginRecord(mapper,loginUser.getUserId());
+            AsyncFactory.loginRecord(mapper,loginUser.getUserId());
         }
         HttpUtils.writeAjaxMsg(request,response,null, JSON.toJSONString(success));
 

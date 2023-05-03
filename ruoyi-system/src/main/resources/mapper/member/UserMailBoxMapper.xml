@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.member.mapper.UserMailBoxMapper">
+    
+    <resultMap type="com.ruoyi.member.domain.UserMailBox" id="UserMailBoxResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="userType"    column="user_type"    />
+        <result property="userIds"    column="user_ids"    />
+        <result property="userNames"    column="user_names"    />
+        <result property="creatTime"    column="creat_time"    />
+        <result property="sendTime"    column="send_time"    />
+        <result property="state"    column="state"    />
+        <result property="topic"    column="topic"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectUserMailBoxVo">
+        select id, title, content, user_type, user_ids, user_names, creat_time, send_time, state, topic, remark from t_user_mail_box
+    </sql>
+
+    <select id="selectMyMailBoxList" parameterType="long" resultMap="UserMailBoxResult">
+        select * from t_user_mail_box where send_time &lt; now() and user_ids = #{uid}
+    </select>
+
+    <select id="selectUserMailBoxList" parameterType="com.ruoyi.member.domain.UserMailBox" resultMap="UserMailBoxResult">
+        <include refid="selectUserMailBoxVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="userType != null "> and user_type = #{userType}</if>
+            <if test="userIds != null  and userIds != ''"> and user_ids = #{userIds}</if>
+            <if test="userNames != null  and userNames != ''"> and user_names = #{userNames}</if>
+            <if test="creatTime != null "> and creat_time = #{creatTime}</if>
+            <if test="sendTime != null "> and send_time = #{sendTime}</if>
+            <if test="state != null "> and state = #{state}</if>
+            <if test="topic != null  and topic != ''"> and topic = #{topic}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserMailBoxById" parameterType="Long" resultMap="UserMailBoxResult">
+        <include refid="selectUserMailBoxVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserMailBox" parameterType="com.ruoyi.member.domain.UserMailBox">
+        insert into t_user_mail_box
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="userType != null">user_type,</if>
+            <if test="userIds != null">user_ids,</if>
+            <if test="userNames != null">user_names,</if>
+            <if test="creatTime != null">creat_time,</if>
+            <if test="sendTime != null">send_time,</if>
+            <if test="state != null">state,</if>
+            <if test="topic != null">topic,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="userType != null">#{userType},</if>
+            <if test="userIds != null">#{userIds},</if>
+            <if test="userNames != null">#{userNames},</if>
+            <if test="creatTime != null">#{creatTime},</if>
+            <if test="sendTime != null">#{sendTime},</if>
+            <if test="state != null">#{state},</if>
+            <if test="topic != null">#{topic},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <insert id="insertBatchUserMailBox" parameterType="com.ruoyi.member.domain.UserMailBox">
+        insert into t_user_mail_box (id, title, content, user_type, user_names, user_ids, creat_time, send_time,state)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id}, #{item.title}, #{item.content}, #{item.userType}, #{item.userNames}, #{item.userIds}, #{item.creatTime},#{item.sendTime}, #{item.state})
+        </foreach>
+    </insert>
+
+    <update id="updateUserMailBox" parameterType="com.ruoyi.member.domain.UserMailBox">
+        update t_user_mail_box
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="userType != null">user_type = #{userType},</if>
+            <if test="userIds != null">user_ids = #{userIds},</if>
+            <if test="userNames != null">user_names = #{userNames},</if>
+            <if test="creatTime != null">creat_time = #{creatTime},</if>
+            <if test="sendTime != null">send_time = #{sendTime},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="topic != null">topic = #{topic},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="changeReadStatus">
+        update t_user_mail_box set state = 1 where id = #{id}
+    </update>
+
+    <delete id="deleteUserMailBoxById" parameterType="Long">
+        delete from t_user_mail_box where id = #{id}
+    </delete>
+
+    <delete id="deleteUserMailBoxByIds" parameterType="String">
+        delete from t_user_mail_box where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

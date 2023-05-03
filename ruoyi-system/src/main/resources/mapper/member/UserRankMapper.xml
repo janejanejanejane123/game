@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.member.mapper.UserRankMapper">
+    
+    <resultMap type="com.ruoyi.member.domain.UserRank" id="UserRankResult">
+        <result property="uid"    column="uid"    />
+        <result property="name"    column="name"    />
+        <result property="transferUids"    column="transfer_uids"    />
+        <result property="transferMoney"    column="transfer_money"    />
+        <result property="leftPeople"    column="left_people"    />
+        <result property="leftMoney"    column="left_money"    />
+        <result property="score"    column="score"    />
+    </resultMap>
+
+    <sql id="selectUserRankVo">
+        select uid, name, transfer_uids, transfer_money, left_people, left_money,score from t_user_rank
+    </sql>
+
+    <select id="selectUserRankList" parameterType="com.ruoyi.member.domain.UserRank" resultMap="UserRankResult">
+        <include refid="selectUserRankVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name = #{name}</if>
+            <if test="transferUids != null  and transferUids != ''"> and transfer_uids = #{transferUids}</if>
+            <if test="transferMoney != null "> and transfer_money = #{transferMoney}</if>
+            <if test="leftPeople != null "> and left_people = #{leftPeople}</if>
+            <if test="leftMoney != null "> and left_money = #{leftMoney}</if>
+            <if test="score != null "> and score = #{score}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserRankByUid" parameterType="Long" resultMap="UserRankResult">
+        <include refid="selectUserRankVo"/>
+        where uid = #{uid}
+    </select>
+        
+    <insert id="insertUserRank" parameterType="com.ruoyi.member.domain.UserRank">
+        insert into t_user_rank
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uid != null">uid,</if>
+            <if test="name != null">name,</if>
+            <if test="transferUids != null">transfer_uids,</if>
+            <if test="transferMoney != null">transfer_money,</if>
+            <if test="leftPeople != null">left_people,</if>
+            <if test="leftMoney != null">left_money,</if>
+            <if test="score != null">score,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uid != null">#{uid},</if>
+            <if test="name != null">#{name},</if>
+            <if test="transferUids != null">#{transferUids},</if>
+            <if test="transferMoney != null">#{transferMoney},</if>
+            <if test="leftPeople != null">#{leftPeople},</if>
+            <if test="leftMoney != null">#{leftMoney},</if>
+            <if test="score != null">#{score},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserRank" parameterType="com.ruoyi.member.domain.UserRank">
+        update t_user_rank
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="transferUids != null and find_in_set(transferUids, transfer_uids) > 0">transfer_uids = #{transferUids},</if>
+            <if test="transferMoney != null">transfer_money = #{transferMoney},</if>
+            <if test="leftPeople != null">left_people = #{leftPeople},</if>
+            <if test="leftMoney != null">left_money = #{leftMoney},</if>
+            <if test="score != null">score = #{score},</if>
+        </trim>
+        where uid = #{uid}
+    </update>
+
+    <delete id="deleteUserRankByUid" parameterType="Long">
+        delete from t_user_rank where uid = #{uid}
+    </delete>
+
+    <delete id="deleteUserRankByUids" parameterType="String">
+        delete from t_user_rank where uid in 
+        <foreach item="uid" collection="array" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+    </delete>
+</mapper>

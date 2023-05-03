@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.pay.mapper.AmountRecordMapper">
+
+    <resultMap type="AmountRecord" id="AmountRecordResult">
+        <result property="id" column="id"/>
+        <result property="mid" column="mid"/>
+        <result property="sysOrder" column="sys_order"/>
+        <result property="userName" column="user_name"/>
+        <result property="amount" column="amount"/>
+        <result property="merOrder" column="mer_order"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="ip" column="ip"/>
+        <result property="merNo" column="mer_no"/>
+        <result property="version" column="version"/>
+        <result property="notifyUrl" column="notify_url"/>
+        <result property="payTime" column="pay_time"/>
+        <result property="fee" column="fee"/>
+        <result property="payUid" column="pay_uid"/>
+        <result property="payUrl" column="pay_url"/>
+        <result property="photo" column="photo"/>
+        <result property="nickname" column="nickname"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectAmountRecordVo">
+        select id,
+               mid,
+               sys_order,
+               user_name,
+               amount,
+               mer_order,
+               status,
+               create_time,
+               ip,
+               mer_no,
+               version,
+               notify_url,
+               pay_time,
+               fee,
+               pay_uid,
+               pay_url,
+               remark
+        from t_amount_record
+    </sql>
+
+    <select id="selectAmountRecordList" parameterType="AmountRecord" resultMap="AmountRecordResult">
+        <include refid="selectAmountRecordVo"/>
+        <where>
+            <if test="mid != null ">and mid = #{mid}</if>
+            <if test="sysOrder != null  and sysOrder != ''">and sys_order = #{sysOrder}</if>
+            <if test="userName != null  and userName != ''">and user_name = #{userName}</if>
+            <if test="amount != null ">and amount = #{amount}</if>
+            <if test="merOrder != null  and merOrder != ''">and mer_order = #{merOrder}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="ip != null  and ip != ''">and ip = #{ip}</if>
+            <if test="merNo != null  and merNo != ''">and mer_no = #{merNo}</if>
+            <if test="version != null ">and version = #{version}</if>
+            <if test="notifyUrl != null  and notifyUrl != ''">and notify_url = #{notifyUrl}</if>
+            <if test="payTime != null ">and pay_time &gt;= #{payTime}</if>
+            <if test="startDate != null "> and pay_time &gt;= #{startDate}</if>
+            <if test="endDate != null "> and pay_time &lt;= #{endDate}</if>
+            <if test="createTime != null ">and create_time &gt;= #{createTime}</if>
+            <if test="fee != null ">and fee = #{fee}</if>
+            <if test="payUid != null ">and pay_uid = #{payUid}</if>
+            <if test="payUrl != null  and payUrl != ''">and pay_url = #{payUrl}</if>
+            <if test="remark != null  and remark != ''">and remark = #{remark}</if>
+        </where>
+            order by create_time desc
+    </select>
+
+
+    <select id="selectAmountRecordSum" parameterType="AmountRecord" resultType="map">
+    select sum(amount) as amountSum ,sum(fee) feeSum
+    from a.t_amount_record
+
+    <where>
+        <if test="mid != null ">and mid = #{mid}</if>
+        <if test="sysOrder != null  and sysOrder != ''">and sys_order = #{sysOrder}</if>
+        <if test="userName != null  and userName != ''">and user_name = #{userName}</if>
+        <if test="amount != null ">and amount = #{amount}</if>
+        <if test="merOrder != null  and merOrder != ''">and mer_order = #{merOrder}</if>
+        <if test="status != null ">and status = #{status}</if>
+        <if test="ip != null  and ip != ''">and ip = #{ip}</if>
+        <if test="merNo != null  and merNo != ''">and mer_no = #{merNo}</if>
+        <if test="version != null ">and version = #{version}</if>
+        <if test="notifyUrl != null  and notifyUrl != ''">and notify_url = #{notifyUrl}</if>
+        <if test="payTime != null ">and pay_time &gt;= #{payTime}</if>
+        <if test="startDate != null "> and pay_time &gt;= #{startDate}</if>
+        <if test="endDate != null "> and pay_time &lt;= #{endDate}</if>
+        <if test="fee != null ">and fee = #{fee}</if>
+        <if test="payUid != null ">and pay_uid = #{payUid}</if>
+        <if test="payUrl != null  and payUrl != ''">and pay_url = #{payUrl}</if>
+        <if test="remark != null  and remark != ''">and remark = #{remark}</if>
+    </where>
+    </select>
+
+    <select id="selectAmountRecordById" parameterType="Long" resultMap="AmountRecordResult">
+        <include refid="selectAmountRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAmountRecord" parameterType="AmountRecord">
+        insert into t_amount_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="mid != null">mid,</if>
+            <if test="sysOrder != null and sysOrder != ''">sys_order,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="amount != null">amount,</if>
+            <if test="merOrder != null">mer_order,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="ip != null">ip,</if>
+            <if test="merNo != null and merNo != ''">mer_no,</if>
+            <if test="version != null">version,</if>
+            <if test="notifyUrl != null">notify_url,</if>
+            <if test="payTime != null">pay_time,</if>
+            <if test="fee != null">fee,</if>
+            <if test="payUid != null">pay_uid,</if>
+            <if test="payUrl != null">pay_url,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="mid != null">#{mid},</if>
+            <if test="sysOrder != null and sysOrder != ''">#{sysOrder},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="merOrder != null">#{merOrder},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="ip != null">#{ip},</if>
+            <if test="merNo != null and merNo != ''">#{merNo},</if>
+            <if test="version != null">#{version},</if>
+            <if test="notifyUrl != null">#{notifyUrl},</if>
+            <if test="payTime != null">#{payTime},</if>
+            <if test="fee != null">#{fee},</if>
+            <if test="payUid != null">#{payUid},</if>
+            <if test="payUrl != null">#{payUrl},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAmountRecord" parameterType="AmountRecord">
+        update t_amount_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mid != null">mid = #{mid},</if>
+            <if test="sysOrder != null and sysOrder != ''">sys_order = #{sysOrder},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="merOrder != null">mer_order = #{merOrder},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="ip != null">ip = #{ip},</if>
+            <if test="merNo != null and merNo != ''">mer_no = #{merNo},</if>
+            <if test="version != null">version = version+1,</if>
+            <if test="notifyUrl != null">notify_url = #{notifyUrl},</if>
+            <if test="payTime != null">pay_time = #{payTime},</if>
+            <if test="fee != null">fee = #{fee},</if>
+            <if test="payUid != null">pay_uid = #{payUid},</if>
+            <if test="payUrl != null">pay_url = #{payUrl},</if>
+            <if test="remark != null">pay_url = #{remark},</if>
+        </trim>
+        where id = #{id}
+        <if test="version != null"> and version = #{version}</if>
+        <if test="mid != null"> and mid = #{mid}</if>
+    </update>
+
+    <delete id="deleteAmountRecordById" parameterType="Long">
+        delete
+        from t_amount_record
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteAmountRecordByIds" parameterType="String">
+        delete from t_amount_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <!--下面自己写的-->
+
+
+    <select id="selectAmountRecordByOrderNo" parameterType="String" resultMap="AmountRecordResult">
+        <include refid="selectAmountRecordVo"/>
+        where sys_order = #{orderNo}
+    </select>
+
+    <select id="selectRechgeCount" parameterType="com.ruoyi.pay.domain.AmountRecord" resultType="java.util.Map">
+        select count(*) from t_amount_record
+        where status = 1
+        <if test="merNo != null">
+            and mer_no = #{merNo}
+        </if>
+        <if test="mid != null">
+            and mid = #{mid}
+        </if>
+        group by mid
+    </select>
+
+</mapper>

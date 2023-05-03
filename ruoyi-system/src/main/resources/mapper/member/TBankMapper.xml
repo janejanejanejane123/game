@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.member.mapper.TBankMapper">
+    
+    <resultMap type="com.ruoyi.member.domain.TBank" id="TBankResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+        <result property="status"    column="status"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="addAdmin"    column="add_admin"    />
+        <result property="upTime"    column="up_time"    />
+        <result property="upAdmin"    column="up_admin"    />
+    </resultMap>
+
+    <sql id="selectTBankVo">
+        select id, name, code, status, add_time, add_admin, up_time, up_admin from t_bank
+    </sql>
+
+    <select id="selectTBankList" parameterType="com.ruoyi.member.domain.TBank" resultMap="TBankResult">
+        <include refid="selectTBankVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="addAdmin != null  and addAdmin != ''"> and add_admin = #{addAdmin}</if>
+            <if test="upTime != null "> and up_time = #{upTime}</if>
+            <if test="upAdmin != null  and upAdmin != ''"> and up_admin = #{upAdmin}</if>
+        </where>
+    </select>
+    
+    <select id="selectTBankById" parameterType="java.lang.Long" resultMap="TBankResult">
+        <include refid="selectTBankVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTBank" parameterType="com.ruoyi.member.domain.TBank">
+        insert into t_bank
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="code != null and code != ''">code,</if>
+            <if test="status != null">status,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="addAdmin != null and addAdmin != ''">add_admin,</if>
+            <if test="upTime != null">up_time,</if>
+            <if test="upAdmin != null">up_admin,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="status != null">#{status},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="addAdmin != null and addAdmin != ''">#{addAdmin},</if>
+            <if test="upTime != null">#{upTime},</if>
+            <if test="upAdmin != null">#{upAdmin},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTBank" parameterType="com.ruoyi.member.domain.TBank">
+        update t_bank
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="code != null and code != ''">code = #{code},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="addAdmin != null and addAdmin != ''">add_admin = #{addAdmin},</if>
+            <if test="upTime != null">up_time = #{upTime},</if>
+            <if test="upAdmin != null">up_admin = #{upAdmin},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTBankById" parameterType="java.lang.Long">
+        delete from t_bank where id = #{id}
+    </delete>
+
+    <delete id="deleteTBankByIds" parameterType="java.lang.String">
+        delete from t_bank where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

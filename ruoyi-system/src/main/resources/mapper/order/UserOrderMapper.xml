@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.order.mapper.UserOrderMapper">
+
+    <resultMap type="com.ruoyi.order.domain.UserOrder" id="UserOrderResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userImage"    column="user_image"    />
+        <result property="totalAmout"    column="total_amout"    />
+        <result property="saleAmout"    column="sale_amout"    />
+        <result property="leftAmout"    column="left_amout"    />
+        <result property="payWay"    column="pay_way"    />
+        <result property="isSplit"    column="is_split"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="userRealName"    column="user_real_name"    />
+        <result property="userCardAddress"    column="user_card_address"    />
+        <result property="userCardRemark"    column="user_card_remark"    />
+        <result property="saleRemark"    column="sale_remark"    />
+    </resultMap>
+
+    <sql id="selectUserOrderVo">
+        select id, user_id, user_name, user_image, total_amout, sale_amout, left_amout, pay_way, is_split, create_time, order_status, update_time, user_real_name, user_card_address, user_card_remark, sale_remark from t_user_order
+    </sql>
+
+    <select id="querySaleAmountByUid" resultType="decimal">
+        select sum(total_amout) from t_user_order where user_id = #{userId} and order_status in (1,2);
+    </select>
+
+    <select id="selectUserOrderList" parameterType="com.ruoyi.order.domain.UserOrder" resultMap="UserOrderResult">
+        <include refid="selectUserOrderVo"/>
+        <where>
+            <if test="id != null  and id != ''"> and id = #{id}</if>
+            <if test="userName != null  and userName != ''"> and user_name = #{userName}</if>
+            <if test=" userId!= null">and user_id = #{userId}</if>
+            <if test="totalAmout != null "> and total_amout &gt;= #{totalAmout}</if>
+            <if test="payWay != null "> and pay_way = #{payWay}</if>
+            <if test="isSplit != null "> and is_split = #{isSplit}</if>
+            <if test="createTime != null "> and create_time &gt;= #{createTime}</if>
+            <if test="startDate != null "> and create_time &gt;= #{startDate}</if>
+            <if test="endDate != null "> and create_time &lt;= #{endDate}</if>
+            <if test="orderStatus != null "> and order_status = #{orderStatus}</if>
+            <if test="userRealName != null  and userRealName != ''"> and user_real_name = #{userRealName}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectUserOrderById" parameterType="String" resultMap="UserOrderResult">
+        <include refid="selectUserOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectPool" resultType="java.util.Map">
+        select id,user_id,pay_way,is_split,total_amout
+        from t_user_order where order_status = 1
+        <if test=" uid!= null and uid != ''">
+            and user_id != #{uid}
+        </if>
+        <if test="amount!= null and amount != ''">
+            <if test='cond == "0"'>
+                and total_amout &gt;= #{amount}
+            </if>
+            <if test='cond == "1"'>
+                and total_amout &lt;= #{amount}
+            </if>
+        </if>
+        <if test=" method!= null and method != ''">
+            and pay_way = #{method}
+        </if>
+        order by create_time
+    </select>
+    <select id="selectMyOrder" resultType="java.util.Map">
+        select order_status as 'orderStatus',pay_way as 'payWay',user_card_address as 'userCardRemark',
+        total_amout as 'totalAmout',id,user_card_address as 'userCardAddress' from t_user_order
+        where user_id = #{uid}
+    </select>
+
+    <select id="queryUnCheckNo" resultType="java.lang.Integer">
+        select count(*) from t_user_order where order_status = 0
+    </select>
+
+    <insert id="insertUserOrder" parameterType="com.ruoyi.order.domain.UserOrder">
+        insert into t_user_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="userImage != null">user_image,</if>
+            <if test="totalAmout != null">total_amout,</if>
+            <if test="saleAmout != null">sale_amout,</if>
+            <if test="leftAmout != null">left_amout,</if>
+            <if test="payWay != null">pay_way,</if>
+            <if test="isSplit != null">is_split,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="orderStatus != null">order_status,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="userRealName != null">user_real_name,</if>
+            <if test="userCardAddress != null">user_card_address,</if>
+            <if test="userCardRemark != null">user_card_remark,</if>
+            <if test="saleRemark != null">sale_remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="userImage != null">#{userImage},</if>
+            <if test="totalAmout != null">#{totalAmout},</if>
+            <if test="saleAmout != null">#{saleAmout},</if>
+            <if test="leftAmout != null">#{leftAmout},</if>
+            <if test="payWay != null">#{payWay},</if>
+            <if test="isSplit != null">#{isSplit},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="orderStatus != null">#{orderStatus},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="userRealName != null">#{userRealName},</if>
+            <if test="userCardAddress != null">#{userCardAddress},</if>
+            <if test="userCardRemark != null">#{userCardRemark},</if>
+            <if test="saleRemark != null">#{saleRemark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserOrder" parameterType="com.ruoyi.order.domain.UserOrder">
+        update t_user_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userImage != null">user_image = #{userImage},</if>
+            <if test="totalAmout != null">total_amout = #{totalAmout},</if>
+            <if test="saleAmout != null">sale_amout = #{saleAmout},</if>
+            <if test="leftAmout != null">left_amout = #{leftAmout},</if>
+            <if test="payWay != null">pay_way = #{payWay},</if>
+            <if test="isSplit != null">is_split = #{isSplit},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="userRealName != null">user_real_name = #{userRealName},</if>
+            <if test="userCardAddress != null">user_card_address = #{userCardAddress},</if>
+            <if test="userCardRemark != null">user_card_remark = #{userCardRemark},</if>
+            <if test="saleRemark != null">sale_remark = #{saleRemark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateUserOrderStatus">
+        update t_user_order set order_status = #{status},sale_remark = #{operateName} where id = #{id} and order_status = #{before}
+    </update>
+
+    <update id="changeOrderStatus">
+        update t_user_order set order_status = #{afterStatus},update_time = now() where id = #{id} and order_status = #{beforeStatus}
+    </update>
+
+    <delete id="deleteUserOrderById" parameterType="String">
+        delete from t_user_order where id = #{id}
+    </delete>
+
+    <delete id="deleteUserOrderByIds" parameterType="String">
+        delete from t_user_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <update id="cancelUserOrder">
+        update t_user_order set order_status = '4',update_time = now() where id = #{id} and user_id = #{userId} and order_status in ('0','1')
+    </update>
+
+    <select id="selectUserOrderSum" resultType="map">
+        select sum(total_amout) as totalAmoutSum from t_user_order
+        <where>
+            <if test="id != null  and id != ''"> and id = #{id}</if>
+            <if test="userName != null  and userName != ''"> and user_name = #{userName}</if>
+            <if test=" userId!= null">and user_id = #{userId}</if>
+            <if test="totalAmout != null "> and total_amout &gt;= #{totalAmout}</if>
+            <if test="payWay != null "> and pay_way = #{payWay}</if>
+            <if test="isSplit != null "> and is_split = #{isSplit}</if>
+            <if test="createTime != null "> and create_time &gt;= #{createTime}</if>
+            <if test="startDate != null "> and create_time &gt;= #{startDate}</if>
+            <if test="endDate != null "> and create_time &lt;= #{endDate}</if>
+            <if test="orderStatus != null "> and order_status = #{orderStatus}</if>
+            <if test="userRealName != null  and userRealName != ''"> and user_real_name = #{userRealName}</if>
+        </where>
+    </select>
+</mapper>

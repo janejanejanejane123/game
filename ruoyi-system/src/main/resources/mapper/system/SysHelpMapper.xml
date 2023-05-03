@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysHelpMapper">
+    
+    <resultMap type="com.ruoyi.system.domain.SysHelp" id="SysHelpResult">
+        <id     property="helpId"    column="help_id"    />
+        <result property="helpTitle"    column="help_title"    />
+        <result property="helpType"    column="help_type"    />
+        <result property="helpContent"    column="help_content"    />
+        <result property="helpIcon"    column="help_icon"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysHelpVo">
+        select help_id, help_title, help_type, help_content,help_icon, status, create_by, create_time, update_by, update_time, remark from sys_help
+    </sql>
+
+    <select id="selectSysHelpList" parameterType="com.ruoyi.system.domain.SysHelp" resultMap="SysHelpResult">
+        <include refid="selectSysHelpVo"/>
+        <where>  
+            <if test="helpTitle != null  and helpTitle != ''"> AND help_title like concat('%', #{helpTitle}, '%')</if>
+            <if test="createBy != null  and createBy != ''"> AND create_by like concat('%', #{createBy}, '%')</if>
+            <if test="helpType != null  and helpType != ''"> AND help_type = #{helpType}</if>
+            <if test="helpContent != null  and helpContent != ''"> AND help_content = #{helpContent}</if>
+            <if test="status != null  and status != ''"> AND status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysHelpByHelpId" parameterType="Long" resultMap="SysHelpResult">
+        <include refid="selectSysHelpVo"/>
+        where help_id = #{helpId}
+    </select>
+        
+    <insert id="insertSysHelp" parameterType="com.ruoyi.system.domain.SysHelp" useGeneratedKeys="true" keyProperty="helpId">
+        insert into sys_help
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="helpId != null and helpId != 0">help_id,</if>
+            <if test="helpTitle != null and helpTitle != ''">help_title,</if>
+            <if test="helpType != null and helpType != ''">help_type,</if>
+            <if test="helpContent != null">help_content,</if>
+            <if test="helpIcon != null">help_icon,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="helpId != null and helpId != 0">#{helpId},</if>
+            <if test="helpTitle != null and helpTitle != ''">#{helpTitle},</if>
+            <if test="helpType != null and helpType != ''">#{helpType},</if>
+            <if test="helpContent != null">#{helpContent},</if>
+            <if test="helpIcon != null">#{helpIcon},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysHelp" parameterType="com.ruoyi.system.domain.SysHelp">
+        update sys_help
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="helpTitle != null and helpTitle != ''">help_title = #{helpTitle},</if>
+            <if test="helpType != null and helpType != ''">help_type = #{helpType},</if>
+            <if test="helpContent != null">help_content = #{helpContent},</if>
+            <if test="helpIcon != null">help_icon = #{helpIcon},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where help_id = #{helpId}
+    </update>
+
+    <delete id="deleteSysHelpByHelpId" parameterType="Long">
+        delete from sys_help where help_id = #{helpId}
+    </delete>
+
+    <delete id="deleteSysHelpByHelpIds" parameterType="String">
+        delete from sys_help where help_id in 
+        <foreach item="helpId" collection="array" open="(" separator="," close=")">
+            #{helpId}
+        </foreach>
+    </delete>
+
+    <!--根据帮助类型查询会员帮助-->
+    <select id="selectSysHelpByHelpType" parameterType="String" resultMap="SysHelpResult">
+        <include refid="selectSysHelpVo"/>
+        where help_type = #{helpType}
+        and status = cast(0 AS CHAR)
+    </select>
+
+    <!--检测帮助类型是否唯一-->
+    <select id="checkHelpTypeUnique" parameterType="String" resultMap="SysHelpResult">
+        <include refid="selectSysHelpVo"/>
+        where help_type = #{helpType} limit 1
+    </select>
+</mapper>

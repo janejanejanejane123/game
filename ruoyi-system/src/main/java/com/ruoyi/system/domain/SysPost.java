@@ -1,25 +1,18 @@
 package com.ruoyi.system.domain;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.annotation.Excel.ColumnType;
 import com.ruoyi.common.core.domain.BaseEntity;
-import lombok.*;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 /**
  * 岗位表 sys_post
  * 
  * @author ruoyi
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@Builder
 public class SysPost extends BaseEntity
 {
     private static final long serialVersionUID = 1L;

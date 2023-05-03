@@ -1,6 +1,5 @@
 package com.ruoyi.system.domain;
 
-import lombok.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -9,11 +8,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * 
  * @author ruoyi
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@Builder
 public class SysUserPost
 {
     /** 用户ID */

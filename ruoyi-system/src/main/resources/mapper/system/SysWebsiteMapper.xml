@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysWebsiteMapper">
+    
+    <resultMap type="SysWebsite" id="SysWebsiteResult">
+        <result property="id"    column="id"    />
+        <result property="siteCode"    column="site_code"    />
+        <result property="siteName"    column="site_name"    />
+        <result property="siteLogo"    column="site_logo"    />
+        <result property="siteIcon"    column="site_icon"    />
+        <result property="siteDesc"    column="site_desc"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectSysWebsiteVo">
+        select id, site_code, site_name, site_logo,site_icon, site_desc, status from sys_website
+    </sql>
+
+    <select id="selectSysWebsiteList" parameterType="SysWebsite" resultMap="SysWebsiteResult">
+        <include refid="selectSysWebsiteVo"/>
+        <where>  
+            <if test="siteCode != null  and siteCode != ''"> and site_code = #{siteCode}</if>
+            <if test="siteName != null  and siteName != ''"> and site_name like concat('%', #{siteName}, '%')</if>
+            <if test="siteLogo != null  and siteLogo != ''"> and site_logo = #{siteLogo}</if>
+            <if test="siteDesc != null  and siteDesc != ''"> and site_desc = #{siteDesc}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysWebsiteById" parameterType="Long" resultMap="SysWebsiteResult">
+        <include refid="selectSysWebsiteVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysWebsite" parameterType="SysWebsite">
+        insert into sys_website
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="siteCode != null">site_code,</if>
+            <if test="siteName != null">site_name,</if>
+            <if test="siteLogo != null">site_logo,</if>
+            <if test="siteIcon != null">site_icon,</if>
+            <if test="siteDesc != null">site_desc,</if>
+            <if test="status != null and status != ''">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="siteCode != null">#{siteCode},</if>
+            <if test="siteName != null">#{siteName},</if>
+            <if test="siteLogo != null">#{siteLogo},</if>
+            <if test="siteIcon != null">#{siteIcon},</if>
+            <if test="siteDesc != null">#{siteDesc},</if>
+            <if test="status != null and status != ''">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysWebsite" parameterType="SysWebsite">
+        update sys_website
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="siteCode != null">site_code = #{siteCode},</if>
+            <if test="siteName != null">site_name = #{siteName},</if>
+            <if test="siteLogo != null">site_logo = #{siteLogo},</if>
+            <if test="siteIcon != null">site_icon = #{siteIcon},</if>
+            <if test="siteDesc != null">site_desc = #{siteDesc},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysWebsiteById" parameterType="Long">
+        delete from sys_website where id = #{id}
+    </delete>
+
+    <delete id="deleteSysWebsiteByIds" parameterType="String">
+        delete from sys_website where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--检测网站code和网站名称是否唯一-->
+    <select id="checkWebsiteUnique" parameterType="SysWebsite" resultMap="SysWebsiteResult">
+        <include refid="selectSysWebsiteVo"/>
+        <where>
+            site_code = #{siteCode}
+             or
+            site_name = #{siteName}
+        </where>
+    </select>
+
+    <!-- 修改网站状态 -->
+    <update id="changeStatus" parameterType="SysWebsite">
+        update sys_website
+        <set>
+            <if test="status != null and status != ''">status = #{status},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--获取网站信息-->
+    <select id="getSysWebsite" parameterType="SysWebsite" resultMap="SysWebsiteResult">
+        <include refid="selectSysWebsiteVo"/>
+        <where>
+            <if test="siteCode != null  and siteCode != ''"> and site_code = #{siteCode}</if>
+        </where>
+    </select>
+
+</mapper>

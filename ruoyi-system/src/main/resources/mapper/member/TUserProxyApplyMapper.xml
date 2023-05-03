@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.member.mapper.TUserProxyApplyMapper">
+    
+    <resultMap type="com.ruoyi.member.domain.TUserProxyApply" id="TUserProxyApplyResult">
+        <result property="id"    column="id"    />
+        <result property="username"    column="username"    />
+        <result property="uid"    column="uid"    />
+        <result property="status"    column="status"    />
+        <result property="createtTime"    column="createt_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateAdmin"    column="update_admin"    />
+    </resultMap>
+
+    <sql id="selectTUserProxyApplyVo">
+        select id, username, uid, status, createt_time, update_time, update_admin from t_user_proxy_apply
+    </sql>
+
+    <select id="selectTUserProxyApplyList" parameterType="com.ruoyi.member.domain.TUserProxyApply" resultMap="TUserProxyApplyResult">
+        <include refid="selectTUserProxyApplyVo"/>
+        <where>  
+            <if test="username != null  and username != ''"> and username = #{username}</if>
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="createtTime != null "> and createt_time = #{createtTime}</if>
+            <if test="updateAdmin != null  and updateAdmin != ''"> and update_admin = #{updateAdmin}</if>
+        </where>
+    </select>
+    
+    <select id="selectTUserProxyApplyById" parameterType="java.lang.Long" resultMap="TUserProxyApplyResult">
+        <include refid="selectTUserProxyApplyVo"/>
+        where id = #{id}
+    </select>
+    <select id="countByUid">
+        select count(1) from t_user_proxy_apply where uid=#{uid} and status = 0
+    </select>
+    <insert id="insertTUserProxyApply" parameterType="com.ruoyi.member.domain.TUserProxyApply">
+        insert into t_user_proxy_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="username != null and username != ''">username,</if>
+            <if test="uid != null">uid,</if>
+            <if test="status != null">status,</if>
+            <if test="createtTime != null">createt_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateAdmin != null">update_admin,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="uid != null">#{uid},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createtTime != null">#{createtTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateAdmin != null">#{updateAdmin},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTUserProxyApply" parameterType="com.ruoyi.member.domain.TUserProxyApply">
+        update t_user_proxy_apply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="uid != null">uid = #{uid},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createtTime != null">createt_time = #{createtTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateAdmin != null">update_admin = #{updateAdmin},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTUserProxyApplyById" parameterType="java.lang.Long">
+        delete from t_user_proxy_apply where id = #{id}
+    </delete>
+
+    <delete id="deleteTUserProxyApplyByIds" parameterType="java.lang.String">
+        delete from t_user_proxy_apply where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

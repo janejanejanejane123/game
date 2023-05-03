@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.order.mapper.TGrabReportMapper">
+    
+    <resultMap type="com.ruoyi.order.domain.TGrabReport" id="TGrabReportResult">
+        <result property="id"    column="id"    />
+        <result property="date"    column="date"    />
+        <result property="type"    column="type"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="amount"    column="amount"    />
+        <result property="transType"    column="trans_type"    />
+        <result property="feeRate"    column="fee_rate"    />
+        <result property="fee"    column="fee"    />
+        <result property="water"    column="water"    />
+        <result property="benifit"    column="benifit"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectTGrabReportVo">
+        select id, date, type, user_id, user_name, amount, trans_type, fee_rate, fee, water, benifit, remark from t_grab_report
+    </sql>
+
+    <select id="selectTGrabReportList" parameterType="com.ruoyi.order.domain.TGrabReport" resultMap="TGrabReportResult">
+        <include refid="selectTGrabReportVo"/>
+        <where>  
+            <if test="date != null "> and date = #{date}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="transType != null "> and trans_type = #{transType}</if>
+            <if test="feeRate != null "> and fee_rate = #{feeRate}</if>
+            <if test="fee != null "> and fee = #{fee}</if>
+            <if test="water != null "> and water = #{water}</if>
+            <if test="benifit != null "> and benifit = #{benifit}</if>
+        </where>
+    </select>
+    
+    <select id="selectTGrabReportById" parameterType="Long" resultMap="TGrabReportResult">
+        <include refid="selectTGrabReportVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTGrabReport" parameterType="com.ruoyi.order.domain.TGrabReport">
+        insert into t_grab_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="date != null">date,</if>
+            <if test="type != null">type,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="amount != null">amount,</if>
+            <if test="transType != null">trans_type,</if>
+            <if test="feeRate != null">fee_rate,</if>
+            <if test="fee != null">fee,</if>
+            <if test="water != null">water,</if>
+            <if test="benifit != null">benifit,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="date != null">#{date},</if>
+            <if test="type != null">#{type},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="transType != null">#{transType},</if>
+            <if test="feeRate != null">#{feeRate},</if>
+            <if test="fee != null">#{fee},</if>
+            <if test="water != null">#{water},</if>
+            <if test="benifit != null">#{benifit},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTGrabReport" parameterType="com.ruoyi.order.domain.TGrabReport">
+        update t_grab_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="date != null">date = #{date},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="transType != null">trans_type = #{transType},</if>
+            <if test="feeRate != null">fee_rate = #{feeRate},</if>
+            <if test="fee != null">fee = #{fee},</if>
+            <if test="water != null">water = #{water},</if>
+            <if test="benifit != null">benifit = #{benifit},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTGrabReportById" parameterType="Long">
+        delete from t_grab_report where id = #{id}
+    </delete>
+
+    <delete id="deleteTGrabReportByIds" parameterType="String">
+        delete from t_grab_report where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

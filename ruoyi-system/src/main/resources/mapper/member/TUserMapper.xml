@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ruoyi.member.mapper.TUserMapper">
+
+    <resultMap type="com.ruoyi.common.core.domain.model.member.TUser" id="TUserResult">
+
+        <result property="username"    column="username"    />
+        <result property="password"    column="password"    />
+        <result property="uid"    column="uid"    />
+        <result property="realname"    column="realname"    />
+        <result property="photo"    column="photo"    />
+        <result property="payPassword"    column="pay_password"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="userLevel"    column="user_level"    />
+        <result property="disabled"    column="disabled"    />
+        <result property="email"    column="email"    />
+        <result property="telephone"    column="telephone"    />
+        <result property="verifiedRealName"    column="verified_real_name"    />
+        <result property="type"    column="type"    />
+        <result property="pid"    column="pid"    />
+        <result property="pidArray"    column="pid_array"    />
+        <result property="salt"    column="salt"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="uniqueCode"    column="unique_code"    />
+        <result property="url"    column="url"    />
+        <!--<result property="createTime"    column="create_time"    />-->
+        <result property="lastLoginIp"    column="last_login_ip"    />
+        <result property="lastLoginCity"    column="last_login_city"    />
+        <result property="merchantId"    column="merchant_id"    />
+    </resultMap>
+
+
+    <resultMap type="com.ruoyi.common.core.domain.model.member.TUserVo" id="TUserResultVo">
+
+        <result property="username"    column="username"    />
+        <result property="password"    column="password"    />
+        <result property="uid"    column="uid"    />
+        <result property="realname"    column="realname"    />
+        <result property="photo"    column="photo"    />
+        <result property="payPassword"    column="pay_password"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="userLevel"    column="user_level"    />
+        <result property="disabled"    column="disabled"    />
+        <result property="email"    column="email"    />
+        <result property="telephone"    column="telephone"    />
+        <result property="verifiedRealName"    column="verified_real_name"    />
+        <result property="type"    column="type"    />
+        <result property="pid"    column="pid"    />
+        <result property="pidArray"    column="pid_array"    />
+        <result property="salt"    column="salt"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="uniqueCode"    column="unique_code"    />
+        <result property="url"    column="url"    />
+        <!--<result property="createTime"    column="create_time"    />-->
+        <result property="lastLoginIp"    column="last_login_ip"    />
+        <result property="lastLoginCity"    column="last_login_city"    />
+        <result property="merchantId"    column="merchant_id"    />
+        <result property="walletAddress"    column="address"    />
+        <result property="balance"    column="balance"    />
+    </resultMap>
+
+    <sql id="selectTUserVo">
+        select merchant_id,create_time,last_login_ip,last_login_city,type,username, password, uid, realname, photo,email,telephone,pay_password,disabled, nickname, user_level,salt,verified_real_name,unique_code,url from t_user
+    </sql>
+
+
+    <sql id="whereCause">
+        <where>
+            <if test="merchantId != null  and merchantId != ''"> and merchant_id =#{merchantId}</if>
+            <if test="username != null  and username != ''"> and username= #{username}</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="realname != null  and realname != ''"> and realname =#{realname}</if>
+            <if test="photo != null  and photo != ''"> and photo = #{photo}</if>
+            <if test="payPassword != null  and payPassword != ''"> and pay_password = #{payPassword}</if>
+            <if test="nickname != null  and nickname != ''"> and nickname = #{nickname}</if>
+            <if test="userLevel != null "> and user_level = #{userLevel}</if>
+            <if test="salt != null "> and salt = #{salt}</if>
+            <if test="disabled != null">and disabled = #{disabled}</if>
+            <if test="email != null and email != ''">and email = #{email}</if>
+            <if test="telephone != null and telephone != ''">and telephone = #{telephone}</if>
+            <if test="verifiedRealName != null ">and verified_real_name = #{verifiedRealName}</if>
+            <if test="type != null ">and type = #{type}</if>
+            <if test="pid != null ">and pid = #{pid}</if>
+            <if test="pidArray != null ">and pid_array = #{pidArray}</if>
+        </where>
+    </sql>
+    <select id="selectTUserList" parameterType="com.ruoyi.common.core.domain.model.member.TUser" resultMap="TUserResultVo">
+        SELECT
+        u.create_time,
+        u.last_login_ip,
+        u.last_login_city,
+        u.type,
+        u.username,
+        u.PASSWORD,
+        u.uid,
+        u.realname,
+        u.photo,
+        u.email,
+        u.telephone,
+        u.pay_password,
+        u.disabled,
+        u.nickname,
+        u.user_level,
+        u.salt,
+        u.verified_real_name,
+        u.unique_code,
+        u.url,
+        u.merchant_id,
+        w.address,
+        w.balance
+        FROM
+        t_user u
+        left join t_wallet w on w.uid = u.uid
+        <where>  
+            <if test="merchantId != null  and merchantId != ''"> and u.merchant_id =#{merchantId}</if>
+            <if test="username != null  and username != ''"> and u.username =  #{username}</if>
+            <if test="password != null  and password != ''"> and u.password = #{password}</if>
+            <if test="realname != null  and realname != ''"> and u.realname =  #{realname}</if>
+            <if test="photo != null  and photo != ''"> and u.photo = #{photo}</if>
+            <if test="payPassword != null  and payPassword != ''"> and u.pay_password = #{payPassword}</if>
+            <if test="nickname != null  and nickname != ''"> and u.nickname = #{nickname}</if>
+            <if test="userLevel != null "> and u.user_level = #{userLevel}</if>
+            <if test="salt != null "> and u.salt = #{salt}</if>
+            <if test="disabled != null ">and u.disabled = #{disabled}</if>
+            <if test="email != null and email != ''">and u.email = #{email}</if>
+            <if test="telephone != null and telephone != ''">and u.telephone = #{telephone}</if>
+            <if test="verifiedRealName != null ">and u.verified_real_name = #{verifiedRealName}</if>
+            <if test="type != null and type !=-1 ">and u.type = #{type}</if>
+            <if test="pid != null ">and u.pid = #{pid}</if>
+            <if test="pidArray != null ">and u.pid_array = #{pidArray}</if>
+            <if test="uniqueCode != null ">and u.unique_code = #{uniqueCode}</if>
+            <if test="walletAddress != null ">and w.address = #{walletAddress}</if>
+            <if test="merchantId != null ">and u.merchant_id = #{merchantId}</if>
+        </where>
+    </select>
+    
+    <select id="selectTUserByUid" parameterType="java.lang.Long" resultMap="TUserResult">
+        <include refid="selectTUserVo"/>
+        where uid = #{uid}
+    </select>
+        
+    <insert id="insertTUser" parameterType="com.ruoyi.common.core.domain.model.member.TUser">
+        insert into t_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">username,</if>
+            <if test="password != null and password != ''">password,</if>
+            <if test="uid != null">uid,</if>
+            <if test="realname != null">realname,</if>
+            <if test="photo != null">photo,</if>
+            <if test="payPassword != null and payPassword != ''">pay_password,</if>
+            <if test="nickname != null and nickname != ''">nickname,</if>
+            <if test="userLevel != null">user_level,</if>
+            <if test="salt != null">salt,</if>
+            <if test="disabled != null">disabled, </if>
+            <if test="email != null and email != ''">email,</if>
+            <if test="telephone != null and telephone != '' " >telephone ,</if>
+            <if test="verifiedRealName != null " >verified_real_name ,</if>
+            <if test="type != null " >type ,</if>
+            <if test="pid != null " >pid ,</if>
+            <if test="pidArray != null " >pid_array ,</if>
+            <if test="createTime != null " >create_time ,</if>
+            <if test="lastLoginIp != null " >last_login_ip ,</if>
+            <if test="lastLoginCity != null " >last_login_city, </if>
+            <if test="url != null " >url ,</if>
+            <if test="uniqueCode != null " >unique_code ,</if>
+            <if test="merchantId != null " >merchant_id </if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="password != null and password != ''">#{password},</if>
+            <if test="uid != null">#{uid},</if>
+            <if test="realname != null">#{realname},</if>
+            <if test="photo != null">#{photo},</if>
+            <if test="payPassword != null and payPassword != ''">#{payPassword},</if>
+            <if test="nickname != null and nickname != ''">#{nickname},</if>
+            <if test="userLevel != null">#{userLevel},</if>
+            <if test="salt != null">#{salt},</if>
+            <if test="disabled != null">#{disabled},</if>
+            <if test="email != null and email != '' ">#{email},</if>
+            <if test="telephone != null and telephone != ''"> #{telephone},</if>
+            <if test="verifiedRealName != null"> #{verifiedRealName},</if>
+            <if test="type != null"> #{type},</if>
+            <if test="pid != null"> #{pid},</if>
+            <if test="pidArray != null"> #{pidArray},</if>
+            <if test="createTime != null"> #{createTime},</if>
+            <if test="lastLoginIp != null"> #{lastLoginIp},</if>
+            <if test="lastLoginCity != null"> #{lastLoginCity},</if>
+            <if test="url != null"> #{url},</if>
+            <if test="uniqueCode != null " >#{uniqueCode}, </if>
+            <if test="merchantId != null " >#{merchantId} </if>
+         </trim>
+    </insert>
+
+    <update id="updateTUser" parameterType="com.ruoyi.common.core.domain.model.member.TUser">
+        update t_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="realname != null">realname = #{realname},</if>
+            <if test="photo != null">photo = #{photo},</if>
+            <if test="payPassword != null and payPassword != ''">pay_password = #{payPassword},</if>
+            <if test="nickname != null and nickname != ''">nickname = #{nickname},</if>
+            <if test="userLevel != null">user_level = #{userLevel},</if>
+            <if test="salt != null">salt = #{salt},</if>
+            <if test="disabled != null">disabled = #{disabled},</if>
+            <if test="email != null and email != ''">email = #{email},</if>
+            <if test="telephone != null and telephone != '' ">telephone = #{telephone},</if>
+            <if test="verifiedRealName != null ">verified_real_name = #{verifiedRealName},</if>
+            <if test="type != null ">type = #{type},</if>
+            <if test="pid != null ">pid = #{pid},</if>
+            <if test="pidArray != null ">pid_array = #{pidArray},</if>
+            <if test="lastLoginIp != null ">last_login_ip = #{lastLoginIp},</if>
+            <if test="lastLoginCity != null ">last_login_city = #{lastLoginCity}</if>
+        </trim>
+        <where>
+            uid = #{uid}
+            <if test="merchantId != null  and merchantId != ''"> and merchant_id =#{merchantId}</if>
+        </where>
+    </update>
+
+    <delete id="deleteTUserByUid" parameterType="java.lang.Long">
+        delete from t_user where uid = #{uid}
+    </delete>
+
+    <delete id="deleteTUserByUids" parameterType="java.lang.String">
+        delete from t_user where uid in 
+        <foreach item="uid" collection="array" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+    </delete>
+
+
+    <select id="count" parameterType="com.ruoyi.common.core.domain.model.member.TUser" resultType="java.lang.Long">
+        select count(1) from t_user
+        <include refid="whereCause"/>
+    </select>
+
+
+    <select id="selectUserByUsername" parameterType="java.lang.String" resultMap="TUserResult">
+        select * from t_user where username = #{username}
+    </select>
+
+
+    <select id="selectApiUserByUsername" parameterType="java.lang.String" resultMap="TUserResult">
+        select * from t_user where username = #{username}
+    </select>
+
+    <select id="selectChildByPid" resultType="java.util.Map" parameterType="java.lang.Long">
+        select nickname, photo from t_user where pid= #{pid}
+    </select>
+
+    <select id="findMax" resultType="java.lang.Long">
+        select max(unique_code) from t_user;
+    </select>
+</mapper>

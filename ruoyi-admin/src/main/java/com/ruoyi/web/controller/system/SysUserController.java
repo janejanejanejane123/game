@@ -1,30 +1,28 @@
 package com.ruoyi.web.controller.system;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.annotation.Decrypt;
 import com.ruoyi.common.annotation.DecryptLong;
-import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.CacheConstant;
-import com.ruoyi.common.constant.UserConstants;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.entity.SysRole;
-import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.redis.RedisCache;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.autoId.SnowflakeIdUtils;
 import com.ruoyi.common.utils.google.GoogleAuthUtils;
 import com.ruoyi.common.utils.google.GoogleAuthenticator;
 import com.ruoyi.common.utils.google.QRCodeUtils;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.utils.sign.Base64;
+import com.ruoyi.pay.domain.Merchant;
+import com.ruoyi.pay.service.IMerchantService;
 import com.ruoyi.system.domain.SysUserOnline;
-import com.ruoyi.system.service.ISysPostService;
-import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserOnlineService;
-import com.ruoyi.system.service.ISysUserService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,16 +30,29 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.constant.UserConstants;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.system.service.ISysPostService;
+import com.ruoyi.system.service.ISysRoleService;
+import com.ruoyi.system.service.ISysUserService;
 
 /**
  * 用户信息
@@ -49,7 +60,7 @@ import java.util.stream.Collectors;
  * @author ruoyi
  */
 @RestController
-@RequestMapping("/com/ruoyi/system/user")
+@RequestMapping("/system/user")
 public class SysUserController extends BaseController {
     @Autowired
     private ISysUserService userService;
@@ -68,6 +79,8 @@ public class SysUserController extends BaseController {
 
     @Autowired
     private ISysUserOnlineService userOnlineService;
+    @Autowired
+    private IMerchantService iMerchantService;
 
     /**
      * 获取用户列表
@@ -209,6 +222,7 @@ public class SysUserController extends BaseController {
         userService.checkUserAllowed(user);
         userService.checkUserDataScope(user.getUserId());
         user.setUpdateBy(getUsername());
+        iMerchantService.updateMerchantStauts(user);
         return toAjax(userService.updateUserStatus(user));
     }
 

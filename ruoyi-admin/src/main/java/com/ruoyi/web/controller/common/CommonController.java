@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.enums.UserInfoApplyEnums;
 import com.ruoyi.common.utils.Assert;
+import com.ruoyi.common.utils.file.MinioUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

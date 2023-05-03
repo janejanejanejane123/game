@@ -1,28 +1,17 @@
 package com.ruoyi.framework.web.service;
 
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.model.LoginMember;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.exception.ServiceException;
-import com.ruoyi.common.utils.*;
-import com.ruoyi.framework.security.context.AuthenticationContextHolder;
-import com.ruoyi.game.domain.Account;
-import com.ruoyi.game.domain.Agent;
-import com.ruoyi.game.domain.request.LoginChildRequest;
-import com.ruoyi.game.domain.request.LoginRequest;
-import com.ruoyi.game.domain.response.D;
-import com.ruoyi.game.domain.response.LoginResponse;
-import com.ruoyi.game.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import com.ruoyi.common.utils.Assert;
+import com.ruoyi.common.utils.MessageUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -232,6 +221,4 @@ public class PermissionService
         }
         return false;
     }
-
-
 }

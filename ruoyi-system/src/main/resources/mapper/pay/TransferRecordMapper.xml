@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.pay.mapper.TransferRecordMapper">
+
+    <resultMap type="TransferRecord" id="TransferRecordResult">
+        <result property="id"    column="id"    />
+        <result property="orderno"    column="orderNo"    />
+        <result property="address"    column="address"    />
+        <result property="amount"    column="amount"    />
+        <result property="fee"    column="fee"    />
+        <result property="status"    column="status"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="transefUid"    column="transef_uid"    />
+        <result property="payeeUid"    column="payee_uid"    />
+        <result property="transefName"    column="transef_name"    />
+        <result property="payeeName"    column="payee_name"    />
+        <result property="version"    column="version"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="sysUsername"    column="sys_username"    />
+        <result property="reason"    column="reason"    />
+    </resultMap>
+
+    <sql id="selectTransferRecordVo">
+        select id, orderNo, address, amount, fee, status, create_date, transef_uid, payee_uid, transef_name, payee_name, version, update_time, sys_username, reason from t_transfer_record
+    </sql>
+
+    <select id="selectTransferRecordList" parameterType="TransferRecord" resultMap="TransferRecordResult">
+        <include refid="selectTransferRecordVo"/>
+        <where>
+            <if test="orderno != null  and orderno != ''"> and orderNo = #{orderno}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="fee != null "> and fee = #{fee}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="startDate != null "> and create_date &gt;= #{startDate}</if>
+            <if test="endDate != null "> and create_date &lt;= #{endDate}</if>
+            <if test="transefUid != null "> and transef_uid = #{transefUid}</if>
+            <if test="payeeUid != null "> and payee_uid = #{payeeUid}</if>
+            <if test="transefName != null  and transefName != ''"> and transef_name = #{transefName}</if>
+            <if test="payeeName != null  and payeeName != ''"> and payee_name = #{payeeName}</if>
+            <if test="version != null "> and version = #{version}</if>
+            <if test="sysUsername != null  and sysUsername != ''"> and sys_username like concat('%', #{sysUsername}, '%')</if>
+            <if test="reason != null  and reason != ''"> and reason = #{reason}</if>
+        </where>
+        order by create_date desc
+    </select>
+
+    <select id="selectTransferRecordSum" parameterType="TransferRecord" resultType="map">
+        select sum(aount) as amountSum
+        <where>
+            <if test="orderno != null  and orderno != ''"> and orderNo = #{orderno}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="fee != null "> and fee = #{fee}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="startDate != null "> and create_date &gt;= #{startDate}</if>
+            <if test="endDate != null "> and create_date &lt;= #{endDate}</if>
+            <if test="transefUid != null "> and transef_uid = #{transefUid}</if>
+            <if test="payeeUid != null "> and payee_uid = #{payeeUid}</if>
+            <if test="transefName != null  and transefName != ''"> and transef_name = #{transefName}</if>
+            <if test="payeeName != null  and payeeName != ''"> and payee_name = #{payeeName}</if>
+            <if test="version != null "> and version = #{version}</if>
+            <if test="sysUsername != null  and sysUsername != ''"> and sys_username = #{sysUsername}</if>
+            <if test="reason != null  and reason != ''"> and reason = #{reason}</if>
+        </where>
+    </select>
+
+    <select id="selectTransferRecordById" parameterType="Long" resultMap="TransferRecordResult">
+        <include refid="selectTransferRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTransferRecord" parameterType="TransferRecord">
+        insert into t_transfer_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="orderno != null and orderno != ''">orderNo,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="amount != null">amount,</if>
+            <if test="fee != null">fee,</if>
+            <if test="status != null">status,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="transefUid != null">transef_uid,</if>
+            <if test="payeeUid != null">payee_uid,</if>
+            <if test="transefName != null and transefName != ''">transef_name,</if>
+            <if test="payeeName != null and payeeName != ''">payee_name,</if>
+            <if test="version != null">version,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="sysUsername != null">sys_username,</if>
+            <if test="reason != null">reason,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="orderno != null and orderno != ''">#{orderno},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="fee != null">#{fee},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="transefUid != null">#{transefUid},</if>
+            <if test="payeeUid != null">#{payeeUid},</if>
+            <if test="transefName != null and transefName != ''">#{transefName},</if>
+            <if test="payeeName != null and payeeName != ''">#{payeeName},</if>
+            <if test="version != null">#{version},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="sysUsername != null">#{sysUsername},</if>
+            <if test="reason != null">#{reason},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTransferRecord" parameterType="TransferRecord">
+        update t_transfer_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderno != null and orderno != ''">orderNo = #{orderno},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="fee != null">fee = #{fee},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="transefUid != null">transef_uid = #{transefUid},</if>
+            <if test="payeeUid != null">payee_uid = #{payeeUid},</if>
+            <if test="transefName != null and transefName != ''">transef_name = #{transefName},</if>
+            <if test="payeeName != null and payeeName != ''">payee_name = #{payeeName},</if>
+            <if test="version != null">version = version+1,</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="sysUsername != null">sys_username = #{sysUsername},</if>
+            <if test="reason != null">reason = #{reason},</if>
+        </trim>
+        where id = #{id} and version= #{version}
+    </update>
+
+    <delete id="deleteTransferRecordById" parameterType="Long">
+        delete from t_transfer_record where id = #{id}
+    </delete>
+
+    <delete id="deleteTransferRecordByIds" parameterType="String">
+        delete from t_transfer_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

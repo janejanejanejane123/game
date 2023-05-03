@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.member.mapper.TUserCreditMapper">
+    
+    <resultMap type="com.ruoyi.common.core.domain.model.member.TUserCredit" id="TUserCreditResult">
+        <result property="id"    column="id"    />
+        <result property="uid"    column="uid"    />
+        <result property="content"    column="content"    />
+        <result property="type"    column="type"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="creditName"    column="credit_name"    />
+        <result property="creditAddress"    column="credit_address"    />
+        <result property="creditBank"    column="credit_bank"    />
+    </resultMap>
+
+    <sql id="selectTUserCreditVo">
+        select credit_bank, id, uid, content, type, add_time, is_delete, credit_name, credit_address from t_user_credit
+    </sql>
+
+    <select id="selectTUserCreditList" parameterType="com.ruoyi.common.core.domain.model.member.TUserCredit" resultMap="TUserCreditResult">
+        <include refid="selectTUserCreditVo"/>
+        <where>  
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+            <if test="creditName != null  and creditName != ''"> and credit_name like concat('%', #{creditName}, '%')</if>
+            <if test="creditAddress != null  and creditAddress != ''"> and credit_address = #{creditAddress}</if>
+            <if test="creditBank != null  and creditBank != ''"> and credit_bank = #{creditBank}</if>
+        </where>
+    </select>
+    
+    <select id="selectTUserCreditById" parameterType="java.lang.Long" resultMap="TUserCreditResult">
+        <include refid="selectTUserCreditVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTUserCredit" parameterType="com.ruoyi.common.core.domain.model.member.TUserCredit">
+        insert into t_user_credit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="uid != null">uid,</if>
+            <if test="content != null">content,</if>
+            <if test="type != null">type,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="creditName != null and creditName != ''">credit_name,</if>
+            <if test="creditAddress != null and creditAddress != ''">credit_address,</if>
+            <if test="creditBank != null and creditBank != ''">credit_bank,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="uid != null">#{uid},</if>
+            <if test="content != null">#{content},</if>
+            <if test="type != null">#{type},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="creditName != null and creditName != ''">#{creditName},</if>
+            <if test="creditAddress != null and creditAddress != ''">#{creditAddress},</if>
+            <if test="creditBank != null and creditBank != ''">#{creditBank},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTUserCredit" parameterType="com.ruoyi.common.core.domain.model.member.TUserCredit">
+        update t_user_credit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null">uid = #{uid},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="creditName != null and creditName != ''">credit_name = #{creditName},</if>
+            <if test="creditAddress != null and creditAddress != ''">credit_address = #{creditAddress},</if>
+            <if test="creditBank != null and creditBank != ''">credit_bank = #{creditBank},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <select id="selectCreditByContent" parameterType="java.lang.String" resultMap="TUserCreditResult">
+        select * from t_user_credit where content = #{content}
+    </select>
+
+    <delete id="deleteTUserCreditById" parameterType="java.lang.Long">
+        delete from t_user_credit where id = #{id}
+    </delete>
+
+    <delete id="deleteTUserCreditByIds" parameterType="java.lang.String">
+        delete from t_user_credit where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

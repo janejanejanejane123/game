@@ -134,7 +134,7 @@ public class TokenService
     {
         String token;
         // 获取请求携带的令牌
-        if(request.getRequestURI().contains("websocket")){
+        if(request.getRequestURI().startsWith("/websocket")){
             token = request.getParameter("token");
         }else{
             token = getToken(request);

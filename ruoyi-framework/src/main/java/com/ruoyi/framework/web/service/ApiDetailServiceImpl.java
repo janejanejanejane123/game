@@ -5,8 +5,11 @@ import com.ruoyi.common.core.domain.model.member.TUser;
 import com.ruoyi.common.utils.Assert;
 import com.ruoyi.common.utils.MessageUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.autoId.SnowflakeIdUtils;
 import com.ruoyi.common.core.auth.ApiAuthKey;
 import com.ruoyi.framework.security.service.ApiUserDetailService;
+import com.ruoyi.member.service.ITUserService;
+import com.ruoyi.system.service.IMemberService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,8 @@ import java.util.Map;
  **/
 @Service("apiDetailService")
 public class ApiDetailServiceImpl implements ApiUserDetailService {
+    @Resource
+    private IMemberService memberService;
     /**
      * api 用户查询
      * 有则查询，没有则新建;
@@ -39,7 +44,7 @@ public class ApiDetailServiceImpl implements ApiUserDetailService {
         String apiUsername = StringUtils.apiUsername(username, merchantNumber);
 
 
-        TUser tUser = new TUser();
+        TUser tUser = memberService.queryApiMemberByUsername(apiUsername);
 
         if (tUser==null){
             throw new UsernameNotFoundException(MessageUtils.message("user.not.exists"));

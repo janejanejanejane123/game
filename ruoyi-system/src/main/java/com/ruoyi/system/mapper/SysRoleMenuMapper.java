@@ -1,18 +1,15 @@
 package com.ruoyi.system.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ruoyi.system.domain.SysConfig;
+import java.util.List;
 import com.ruoyi.system.domain.SysRoleMenu;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 /**
  * 角色与菜单关联表 数据层
  * 
  * @author ruoyi
  */
-public interface SysRoleMenuMapper extends BaseMapper<SysRoleMenu>
+public interface SysRoleMenuMapper
 {
 
     List<Long> selectRolIdByMenuId(@Param("menuId") Long menuId);

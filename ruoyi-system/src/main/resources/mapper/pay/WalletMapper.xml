@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.pay.mapper.WalletMapper">
+
+    <resultMap type="com.ruoyi.pay.domain.Wallet" id="WalletResult">
+        <result property="id"    column="id"    />
+        <result property="uid"    column="uid"    />
+        <result property="balance"    column="balance"    />
+        <result property="frozenBalance"    column="frozen_balance"    />
+        <result property="type"    column="type"    />
+        <result property="uptime"    column="uptime"    />
+        <result property="name"    column="name"    />
+        <result property="address"    column="address"    />
+        <result property="depositBalance"    column="deposit_balance"    />
+        <result property="buyAmount"    column="buy_amount"    />
+    </resultMap>
+
+    <sql id="selectWalletVo">
+        select id, uid, balance, frozen_balance, type, uptime, name, address,deposit_balance,buy_amount from t_wallet
+    </sql>
+
+    <select id="selectWalletList" parameterType="com.ruoyi.pay.domain.Wallet" resultMap="WalletResult">
+        <include refid="selectWalletVo"/>
+        <where>
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="balance != null "> and balance = #{balance}</if>
+            <if test="frozenBalance != null "> and frozen_balance = #{frozenBalance}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="uptime != null "> and uptime = #{uptime}</if>
+            <if test="name != null  and name != ''"> and name = #{name}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="depositBalance != null  and depositBalance != ''"> and deposit_balance = #{depositBalance}</if>
+        </where>
+    </select>
+
+    <select id="selectWalletById" parameterType="Long" resultMap="WalletResult">
+        <include refid="selectWalletVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWallet" parameterType="com.ruoyi.pay.domain.Wallet">
+        insert into t_wallet
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="uid != null">uid,</if>
+            <if test="balance != null">balance,</if>
+            <if test="frozenBalance != null">frozen_balance,</if>
+            <if test="type != null">type,</if>
+            <if test="uptime != null">uptime,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="depositBalance !=null ">deposit_balance,</if>
+            <if test="buyAmount !=null ">buy_amount,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="uid != null">#{uid},</if>
+            <if test="balance != null">#{balance},</if>
+            <if test="frozenBalance != null">#{frozenBalance},</if>
+            <if test="type != null">#{type},</if>
+            <if test="uptime != null">#{uptime},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="depositBalance != null">#{depositBalance},</if>
+            <if test="buyAmount != null">#{buyAmount},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWallet" parameterType="com.ruoyi.pay.domain.Wallet">
+        update t_wallet
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null">uid = #{uid},</if>
+            <if test="balance != null">balance = #{balance},</if>
+            <if test="frozenBalance != null">frozen_balance = #{frozenBalance},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="uptime != null">uptime = #{uptime},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWalletById" parameterType="Long">
+        delete from t_wallet where id = #{id}
+    </delete>
+
+    <delete id="deleteWalletByIds" parameterType="String">
+        delete from t_wallet where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+    <!--以下自己写的-->
+    <!--扣款 冻结 加款 -->
+    <update id="modifyWalletByUserId" parameterType="com.ruoyi.pay.domain.Wallet">
+        update t_wallet
+        <set>
+            <if test="balance != null">
+                balance =balance + #{balance},
+            </if>
+            <if test="frozenBalance != null">
+                frozen_balance =frozen_balance +#{frozenBalance},
+            </if>
+            <if test="uptime != null">
+                uptime = #{uptime},
+            </if>
+            <if test="buyAmount != null">
+                 buy_amount=buy_amount +#{buyAmount},
+            </if>
+        </set>
+        where uid = #{uid}
+        <if test="balance != null">
+            AND balance + #{balance} >=0
+        </if>
+        <if test="frozenBalance != null">
+            AND frozen_balance +#{frozenBalance} >=0
+        </if>
+        <if test="buyAmount != null">
+            AND buy_amount +#{buyAmount} >=0
+        </if>
+    </update>
+
+
+    <select id="selectWalletByaddress" parameterType="String" resultMap="WalletResult">
+        <include refid="selectWalletVo"/>
+        where address = #{address}
+    </select>
+
+    <select id="selectWalletByUid" parameterType="Long" resultMap="WalletResult">
+        <include refid="selectWalletVo"/>
+        where uid = #{uid}
+    </select>
+
+    <select id="selectWalletSum" parameterType="Long" resultMap="WalletResult">
+        select sum(balance) as  balance from t_wallet
+
+    </select>
+    <select id="selectMerchantByUid" resultType="java.lang.String">
+        select name from t_wallet where uid = #{uid}
+    </select>
+</mapper>

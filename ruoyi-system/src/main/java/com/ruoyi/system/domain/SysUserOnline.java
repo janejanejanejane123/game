@@ -1,17 +1,10 @@
 package com.ruoyi.system.domain;
 
-import lombok.*;
-
 /**
  * 当前在线会话
  * 
  * @author ruoyi
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@Builder
 public class SysUserOnline
 {
     /** 会话编号 */

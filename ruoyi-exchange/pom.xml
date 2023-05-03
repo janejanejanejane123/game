@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>ruoyi</artifactId>
+        <groupId>com.ruoyi</groupId>
+        <version>3.8.3</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+    <artifactId>ruoyi-exchange</artifactId>
+
+    <description>
+        web服务入口
+    </description>
+
+    <properties>
+        <profiles.dir>src/main/profiles</profiles.dir>
+    </properties>
+
+    <dependencies>
+
+        <!-- spring-boot-devtools -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional> <!-- 表示依赖不会传递 -->
+        </dependency>
+
+        <!-- swagger3-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 防止进入swagger页面报类型转换错误，排除3.0.0中的引用，手动增加1.6.2版本 -->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+
+         <!-- Mysql驱动包 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <!-- 核心模块-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-framework</artifactId>
+        </dependency>
+
+        <!-- 定时任务-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-quartz</artifactId>
+        </dependency>
+
+        <!-- 代码生成-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-generator</artifactId>
+        </dependency>
+
+        <!-- 通用工具-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-common</artifactId>
+            <version>${ruoyi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-system</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-typehandlers-jsr310</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.ruoyi</groupId>-->
+<!--            <artifactId>rouyi-agent</artifactId>-->
+<!--            <version>3.8.3</version>-->
+<!--        </dependency>-->
+
+    </dependencies>
+
+    <profiles>
+        <!--开发环境-->
+        <profile>
+            <id>dev</id>
+            <activation>
+                <property>
+                    <name>environment.type</name>
+                    <value>dev</value>
+                </property>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <profile.dir>${profiles.dir}/dev</profile.dir>
+                <env.devMode>dev</env.devMode>
+                <skipAssemblyDev>false</skipAssemblyDev>
+                <skipAssemblyProductA>true</skipAssemblyProductA>
+                <skipAssemblyProduct>true</skipAssemblyProduct>
+            </properties>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>${profile.dir}</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <!--预生产环境-->
+        <profile>
+            <id>productA</id>
+            <activation>
+                <property>
+                    <name>environment.type</name>
+                    <value>productA</value>
+                </property>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <profile.dir>${profiles.dir}/productA</profile.dir>
+                <env.devMode>productA</env.devMode>
+                <skipAssemblyDev>true</skipAssemblyDev>
+                <skipAssemblyProduct>true</skipAssemblyProduct>
+                <skipAssemblyProductA>false</skipAssemblyProductA>
+            </properties>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>${profile.dir}</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <!--生产环境-->
+        <profile>
+            <id>product</id>
+            <activation>
+                <property>
+                    <name>environment.type</name>
+                    <value>product</value>
+                </property>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <profile.dir>${profiles.dir}/product</profile.dir>
+                <env.devMode>product</env.devMode>
+                <skipAssemblyDev>true</skipAssemblyDev>
+                <skipAssemblyProduct>false</skipAssemblyProduct>
+                <skipAssemblyProductA>true</skipAssemblyProductA>
+            </properties>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>${profile.dir}</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+
+    </profiles>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <finalName>${project.artifactId}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <targetPath>${project.build.directory}/config</targetPath>
+            </resource>
+            <resource>
+                <directory>${profile.dir}</directory>
+                <filtering>true</filtering>
+                <targetPath>${project.build.directory}/config</targetPath>
+            </resource>
+            <resource>
+                <directory>src/main/profiles</directory>
+                <filtering>true</filtering>
+                <targetPath>${project.build.directory}</targetPath>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>woff</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>woff2</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>eot</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>svg</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>db</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
+            <!-- 配置spring boot maven插件，把项目打包成可运行的jar包 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.1.5.RELEASE</version>
+                <configuration>
+                    <executable>true</executable>
+                    <fork>true</fork>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*.properties</exclude>
+                        <exclude>**/*.xml</exclude>
+                        <exclude>**/*.yml</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <!--开发环境构建脚本-->
+                    <execution>
+                        <id>dev</id>  <!--The identifier of this execution for labelling the goals during the build   标志-->
+                        <phase>package</phase>      <!--The build lifecycle phase to bind the goals in this execution to  指定其编译阶段-->
+                        <goals>
+                            <goal>single</goal>     <!--The goals to execute with the given configuration-->
+                        </goals>
+                        <configuration>
+                            <skipAssembly>${skipAssemblyDev}</skipAssembly>   <!--profile声明参数调用-->
+                            <descriptors>
+                                <descriptor>src/main/profiles/assembly/dev/assembly.xml</descriptor>   <!--加载指定的assembly配置文件-->
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                    <!--预生产环境构建脚本-->
+                    <execution>
+                        <id>productA</id>  <!--The identifier of this execution for labelling the goals during the build   标志-->
+                        <phase>package</phase>      <!--The build lifecycle phase to bind the goals in this execution to  指定其编译阶段-->
+                        <goals>
+                            <goal>single</goal>     <!--The goals to execute with the given configuration-->
+                        </goals>
+                        <configuration>
+                            <skipAssembly>${skipAssemblyProductA}</skipAssembly>   <!--profile声明参数调用-->
+                            <descriptors>
+                                <descriptor>src/main/profiles/assembly/productA/assembly.xml</descriptor>   <!--加载指定的assembly配置文件-->
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                    <!--生产环境构建脚本-->
+                    <execution>
+                        <id>product</id>  <!--The identifier of this execution for labelling the goals during the build   标志-->
+                        <phase>package</phase>      <!--The build lifecycle phase to bind the goals in this execution to  指定其编译阶段-->
+                        <goals>
+                            <goal>single</goal>     <!--The goals to execute with the given configuration-->
+                        </goals>
+                        <configuration>
+                            <skipAssembly>${skipAssemblyProduct}</skipAssembly>   <!--profile声明参数调用-->
+                            <descriptors>
+                                <descriptor>src/main/profiles/assembly/product/assembly.xml</descriptor>   <!--加载指定的assembly配置文件-->
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>

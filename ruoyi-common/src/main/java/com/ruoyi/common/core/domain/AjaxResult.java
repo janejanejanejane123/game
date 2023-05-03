@@ -10,7 +10,7 @@ import com.ruoyi.common.utils.StringUtils;
  * 
  * @author ruoyi
  */
-public class AjaxResult extends HashMap<String, Object>
+public class AjaxResult extends HashMap<String, Object> implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
@@ -103,29 +103,6 @@ public class AjaxResult extends HashMap<String, Object>
     }
 
     /**
-     * 返回警告消息
-     *
-     * @param msg 返回内容
-     * @return 警告消息
-     */
-    public static AjaxResult warn(String msg)
-    {
-        return AjaxResult.warn(msg, null);
-    }
-
-    /**
-     * 返回警告消息
-     *
-     * @param msg 返回内容
-     * @param data 数据对象
-     * @return 警告消息
-     */
-    public static AjaxResult warn(String msg, Object data)
-    {
-        return new AjaxResult(HttpStatus.WARN, msg, data);
-    }
-
-    /**
      * 返回错误消息
      * 
      * @return
@@ -182,10 +159,5 @@ public class AjaxResult extends HashMap<String, Object>
     {
         super.put(key, value);
         return this;
-    }
-
-    public boolean isSuccess() {
-        return (Integer) this.get(CODE_TAG)==200;
-
     }
 }

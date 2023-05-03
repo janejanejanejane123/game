@@ -3,7 +3,6 @@ package com.ruoyi.game.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.game.domain.UserThirdAuth;
 
-
 import java.util.List;
 
 /**

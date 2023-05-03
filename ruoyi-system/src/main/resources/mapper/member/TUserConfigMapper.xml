@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.member.mapper.TUserConfigMapper">
+    
+    <resultMap type="com.ruoyi.member.domain.TUserConfig" id="TUserConfigResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="configKey"    column="config_key"    />
+        <result property="open"    column="open"    />
+        <result property="need"    column="need"    />
+        <result property="extra"    column="extra"    />
+        <result property="type"    column="type"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="addUser"    column="add_user"    />
+    </resultMap>
+
+    <sql id="selectTUserConfigVo">
+        select id, name, config_key, open, need , extra, type, add_time, add_user from t_user_config
+    </sql>
+
+    <select id="selectTUserConfigList" parameterType="com.ruoyi.member.domain.TUserConfig" resultMap="TUserConfigResult">
+        <include refid="selectTUserConfigVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="configKey != null  and configKey != ''"> and config_key = #{configKey}</if>
+            <if test="open != null "> and open = #{open}</if>
+            <if test="need != null "> and need = #{need}</if>
+            <if test="extra != null  and extra != ''"> and extra = #{extra}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="addTime != null "> and add_time = #{addTime}</if>
+            <if test="addUser != null  and addUser != ''"> and add_user = #{addUser}</if>
+        </where>
+    </select>
+    
+    <select id="selectTUserConfigById" parameterType="java.lang.Long" resultMap="TUserConfigResult">
+        <include refid="selectTUserConfigVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTUserConfig" parameterType="com.ruoyi.member.domain.TUserConfig">
+        insert into t_user_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="configKey != null and configKey != ''">config_key,</if>
+            <if test="open != null">open,</if>
+            <if test="need != null">need,</if>
+            <if test="extra != null">extra,</if>
+            <if test="type != null">type,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="addUser != null">add_user,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="configKey != null and configKey != ''">#{configKey},</if>
+            <if test="open != null">#{open},</if>
+            <if test="need != null">#{need},</if>
+            <if test="extra != null">#{extra},</if>
+            <if test="type != null">#{type},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="addUser != null">#{addUser},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTUserConfig" parameterType="com.ruoyi.member.domain.TUserConfig">
+        update t_user_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="configKey != null and configKey != ''">config_key = #{configKey},</if>
+            <if test="open != null">open = #{open},</if>
+            <if test="need != null">need = #{need},</if>
+            <if test="extra != null">extra = #{extra},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="addUser != null">add_user = #{addUser},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTUserConfigById" parameterType="java.lang.Long">
+        delete from t_user_config where id = #{id}
+    </delete>
+
+    <delete id="deleteTUserConfigByIds" parameterType="java.lang.String">
+        delete from t_user_config where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="selectRegisteredConfig" resultType="java.util.Map">
+        select name,open,need,extra,config_key as confkey from t_user_config where type =1;
+    </select>
+</mapper>

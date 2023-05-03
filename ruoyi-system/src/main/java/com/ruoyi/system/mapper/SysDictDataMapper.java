@@ -1,18 +1,15 @@
 package com.ruoyi.system.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ruoyi.common.core.domain.entity.SysDictData;
-import com.ruoyi.system.domain.SysConfig;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
+import com.ruoyi.common.core.domain.entity.SysDictData;
 
 /**
  * 字典表 数据层
  * 
  * @author ruoyi
  */
-public interface SysDictDataMapper extends BaseMapper<SysDictData>
+public interface SysDictDataMapper
 {
     /**
      * 根据条件分页查询字典数据

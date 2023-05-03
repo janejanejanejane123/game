@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.order.mapper.GrabOrderMapper">
+    
+    <resultMap type="com.ruoyi.order.domain.GrabOrder" id="GrabOrderResult">
+        <result property="id"    column="id"    />
+        <result property="merchant"    column="merchant"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="amount"    column="amount"    />
+        <result property="rechargeWay"    column="recharge_way"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="grabTime"    column="grab_time"    />
+        <result property="payTime"    column="pay_time"    />
+        <result property="pauseTime"    column="pause_time"    />
+        <result property="finishTime"    column="finish_time"    />
+        <result property="cancelTime"    column="cancel_time"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userRealName"    column="user_real_name"    />
+        <result property="userCardAddress"    column="user_card_address"    />
+        <result property="userCardRemark"    column="user_card_remark"    />
+        <result property="saleRemark"    column="sale_remark"    />
+        <result property="successImg"    column="success_img"    />
+        <result property="pauseImg"    column="pause_img"    />
+        <result property="feeRate"    column="fee_rate"    />
+        <result property="fee"    column="fee"    />
+        <result property="callBackUrl"    column="call_back_url"    />
+        <result property="operateName"    column="operate_name"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectGrabOrderVo">
+        select id, merchant, order_id, amount, recharge_way, order_status, create_time, grab_time, pay_time, pause_time, finish_time, cancel_time, user_id, user_name, user_real_name, user_card_address, user_card_remark, sale_remark, success_img, pause_img, fee_rate, fee, call_back_url, operate_name, remark from t_grab_order
+    </sql>
+
+    <select id="selectGrabOrderList" parameterType="com.ruoyi.order.domain.GrabOrder" resultMap="GrabOrderResult">
+        <include refid="selectGrabOrderVo"/>
+        <where>  
+            <if test="merchant != null  and merchant != ''"> and merchant = #{merchant}</if>
+            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="rechargeWay != null "> and recharge_way = #{rechargeWay}</if>
+            <if test="orderStatus != null "> and order_status = #{orderStatus}</if>
+            <if test="grabTime != null "> and grab_time = #{grabTime}</if>
+            <if test="payTime != null "> and pay_time = #{payTime}</if>
+            <if test="pauseTime != null "> and pause_time = #{pauseTime}</if>
+            <if test="finishTime != null "> and finish_time = #{finishTime}</if>
+            <if test="cancelTime != null "> and cancel_time = #{cancelTime}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="userRealName != null  and userRealName != ''"> and user_real_name like concat('%', #{userRealName}, '%')</if>
+            <if test="userCardAddress != null  and userCardAddress != ''"> and user_card_address = #{userCardAddress}</if>
+            <if test="userCardRemark != null  and userCardRemark != ''"> and user_card_remark = #{userCardRemark}</if>
+            <if test="saleRemark != null  and saleRemark != ''"> and sale_remark = #{saleRemark}</if>
+            <if test="successImg != null  and successImg != ''"> and success_img = #{successImg}</if>
+            <if test="pauseImg != null  and pauseImg != ''"> and pause_img = #{pauseImg}</if>
+            <if test="feeRate != null "> and fee_rate = #{feeRate}</if>
+            <if test="fee != null "> and fee = #{fee}</if>
+            <if test="callBackUrl != null  and callBackUrl != ''"> and call_back_url = #{callBackUrl}</if>
+            <if test="operateName != null  and operateName != ''"> and operate_name like concat('%', #{operateName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectGrabOrderById" parameterType="String" resultMap="GrabOrderResult">
+        <include refid="selectGrabOrderVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectMarketList" resultMap="GrabOrderResult">
+        <include refid="selectGrabOrderVo"/> where order_status = '1'
+        <if test="payWay != null  and payWay != ''"> and recharge_way = #{payWay}</if>
+        <if test="amount!= null and amount != ''">
+            <if test='cond == "0"'>
+                and total_amout &gt;= #{amount}
+            </if>
+            <if test='cond == "1"'>
+                and total_amout &lt;= #{amount}
+            </if>
+        </if>
+    </select>
+    <select id="queryMyOrder" resultType="com.ruoyi.order.domain.GrabOrder">
+        <include refid="selectGrabOrderVo"/> where user_id = #{uid}
+        <if test="payWay != null  and payWay != ''"> and recharge_way = #{payWay}</if>
+        <if test="amount!= null and amount != ''">
+            <if test='cond == "0"'>
+                and total_amout &gt;= #{amount}
+            </if>
+            <if test='cond == "1"'>
+                and total_amout &lt;= #{amount}
+            </if>
+        </if>
+    </select>
+
+    <insert id="insertGrabOrder" parameterType="com.ruoyi.order.domain.GrabOrder">
+        insert into t_grab_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="merchant != null">merchant,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="amount != null">amount,</if>
+            <if test="rechargeWay != null">recharge_way,</if>
+            <if test="orderStatus != null">order_status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="grabTime != null">grab_time,</if>
+            <if test="payTime != null">pay_time,</if>
+            <if test="pauseTime != null">pause_time,</if>
+            <if test="finishTime != null">finish_time,</if>
+            <if test="cancelTime != null">cancel_time,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="userRealName != null">user_real_name,</if>
+            <if test="userCardAddress != null">user_card_address,</if>
+            <if test="userCardRemark != null">user_card_remark,</if>
+            <if test="saleRemark != null">sale_remark,</if>
+            <if test="successImg != null">success_img,</if>
+            <if test="pauseImg != null">pause_img,</if>
+            <if test="feeRate != null">fee_rate,</if>
+            <if test="fee != null">fee,</if>
+            <if test="callBackUrl != null">call_back_url,</if>
+            <if test="operateName != null">operate_name,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="merchant != null">#{merchant},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="rechargeWay != null">#{rechargeWay},</if>
+            <if test="orderStatus != null">#{orderStatus},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="grabTime != null">#{grabTime},</if>
+            <if test="payTime != null">#{payTime},</if>
+            <if test="pauseTime != null">#{pauseTime},</if>
+            <if test="finishTime != null">#{finishTime},</if>
+            <if test="cancelTime != null">#{cancelTime},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="userRealName != null">#{userRealName},</if>
+            <if test="userCardAddress != null">#{userCardAddress},</if>
+            <if test="userCardRemark != null">#{userCardRemark},</if>
+            <if test="saleRemark != null">#{saleRemark},</if>
+            <if test="successImg != null">#{successImg},</if>
+            <if test="pauseImg != null">#{pauseImg},</if>
+            <if test="feeRate != null">#{feeRate},</if>
+            <if test="fee != null">#{fee},</if>
+            <if test="callBackUrl != null">#{callBackUrl},</if>
+            <if test="operateName != null">#{operateName},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGrabOrder" parameterType="com.ruoyi.order.domain.GrabOrder">
+        update t_grab_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="merchant != null">merchant = #{merchant},</if>
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="rechargeWay != null">recharge_way = #{rechargeWay},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="grabTime != null">grab_time = #{grabTime},</if>
+            <if test="payTime != null">pay_time = #{payTime},</if>
+            <if test="pauseTime != null">pause_time = #{pauseTime},</if>
+            <if test="finishTime != null">finish_time = #{finishTime},</if>
+            <if test="cancelTime != null">cancel_time = #{cancelTime},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userRealName != null">user_real_name = #{userRealName},</if>
+            <if test="userCardAddress != null">user_card_address = #{userCardAddress},</if>
+            <if test="userCardRemark != null">user_card_remark = #{userCardRemark},</if>
+            <if test="saleRemark != null">sale_remark = #{saleRemark},</if>
+            <if test="successImg != null">success_img = #{successImg},</if>
+            <if test="pauseImg != null">pause_img = #{pauseImg},</if>
+            <if test="feeRate != null">fee_rate = #{feeRate},</if>
+            <if test="fee != null">fee = #{fee},</if>
+            <if test="callBackUrl != null">call_back_url = #{callBackUrl},</if>
+            <if test="operateName != null">operate_name = #{operateName},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <update id="updateGrabOrderStatus" parameterType="com.ruoyi.order.domain.GrabOrder">
+        update t_grab_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="merchant != null">merchant = #{merchant},</if>
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="rechargeWay != null">recharge_way = #{rechargeWay},</if>
+            <if test="orderStatus != null">order_status = #{orderStatus},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="grabTime != null">grab_time = #{grabTime},</if>
+            <if test="payTime != null">pay_time = #{payTime},</if>
+            <if test="pauseTime != null">pause_time = #{pauseTime},</if>
+            <if test="finishTime != null">finish_time = #{finishTime},</if>
+            <if test="cancelTime != null">cancel_time = #{cancelTime},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userRealName != null">user_real_name = #{userRealName},</if>
+            <if test="userCardAddress != null">user_card_address = #{userCardAddress},</if>
+            <if test="userCardRemark != null">user_card_remark = #{userCardRemark},</if>
+            <if test="saleRemark != null">sale_remark = #{saleRemark},</if>
+            <if test="successImg != null">success_img = #{successImg},</if>
+            <if test="pauseImg != null">pause_img = #{pauseImg},</if>
+            <if test="feeRate != null">fee_rate = #{feeRate},</if>
+            <if test="fee != null">fee = #{fee},</if>
+            <if test="callBackUrl != null">call_back_url = #{callBackUrl},</if>
+            <if test="operateName != null">operate_name = #{operateName},</if>
+        </trim>
+        where id = #{id}
+        <if test="remark != null  and remark != ''"> and order_status = #{remark}</if>
+    </update>
+
+    <delete id="deleteGrabOrderById" parameterType="String">
+        delete from t_grab_order where id = #{id}
+    </delete>
+
+    <delete id="deleteGrabOrderByIds" parameterType="String">
+        delete from t_grab_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,26 +1,31 @@
 package com.ruoyi.web.controller.system;
 
+import com.ruoyi.common.annotation.Decrypt;
+
+import java.util.List;
+import java.util.Set;
+
 import com.ruoyi.common.annotation.DecryptLong;
 import com.ruoyi.common.annotation.RedisLockOperate;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.entity.SysMenu;
-import com.ruoyi.common.core.domain.entity.SysUser;
-import com.ruoyi.common.core.domain.model.LoginBody;
-import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.ip.IpUtils;
-import com.ruoyi.framework.web.service.SysLoginService;
-import com.ruoyi.framework.web.service.SysPermissionService;
-import com.ruoyi.system.service.ISysMenuService;
+import com.ruoyi.settings.domain.SysIpBlacklist;
+import com.ruoyi.settings.service.ISysIpBlacklistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Set;
-
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysMenu;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginBody;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.framework.web.service.SysLoginService;
+import com.ruoyi.framework.web.service.SysPermissionService;
+import com.ruoyi.system.service.ISysMenuService;
 
 /**
  * 登录验证
@@ -38,6 +43,8 @@ public class SysLoginController {
     @Autowired
     private SysPermissionService permissionService;
 
+    @Autowired
+    private ISysIpBlacklistService sysIpBlacklistService;
 
     /**
      * 登录方法
@@ -50,6 +57,10 @@ public class SysLoginController {
     public void login(@RequestBody LoginBody loginBody) {
         // 请求的ip地址.
         String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
+        boolean result = sysIpBlacklistService.verifyIpBlacklist(loginBody.getUsername(),ip);
+        if(!result){
+            throw new ServiceException("登录ip异常!");
+        }
         loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(), loginBody.getGoogleCode(),
                         loginBody.getUuid());
     }

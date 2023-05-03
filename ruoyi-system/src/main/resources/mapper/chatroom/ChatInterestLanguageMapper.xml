@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chatroom.mapper.ChatInterestLanguageMapper">
+    
+    <resultMap type="ChatInterestLanguage" id="ChatInterestLanguageResult">
+        <result property="interestId"    column="interest_id"/>
+        <result property="interestContent"    column="interest_content"/>
+        <result property="interestType"    column="interest_type"/>
+        <result property="createBy"    column="create_by"/>
+        <result property="createTime"    column="create_time"/>
+        <result property="status"    column="status"/>
+        <result property="remark"    column="remark"/>
+    </resultMap>
+
+    <sql id="selectChatInterestLanguageVo">
+        select interest_id, interest_content, interest_type, create_by, create_time, status, remark from t_chat_interest_language
+    </sql>
+
+    <select id="selectChatInterestLanguageList" parameterType="ChatInterestLanguage" resultMap="ChatInterestLanguageResult">
+        <include refid="selectChatInterestLanguageVo"/>
+        <where>  
+            <if test="interestContent != null  and interestContent != ''"> and interest_content like concat('%', #{interestContent}, '%')</if>
+            <if test="interestType != null  and interestType != ''"> and interest_type = #{interestType}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="remark != null  and remark != ''"> and remark = #{remark}</if>
+        </where>
+    </select>
+    
+    <select id="selectChatInterestLanguageByInterestId" parameterType="Long" resultMap="ChatInterestLanguageResult">
+        <include refid="selectChatInterestLanguageVo"/>
+        where interest_id = #{interestId}
+    </select>
+        
+    <insert id="insertChatInterestLanguage" parameterType="ChatInterestLanguage">
+        insert into t_chat_interest_language
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="interestId != null">interest_id,</if>
+            <if test="interestContent != null">interest_content,</if>
+            <if test="interestType != null">interest_type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="interestId != null">#{interestId},</if>
+            <if test="interestContent != null">#{interestContent},</if>
+            <if test="interestType != null">#{interestType},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateChatInterestLanguage" parameterType="ChatInterestLanguage">
+        update t_chat_interest_language
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="interestContent != null">interest_content = #{interestContent},</if>
+            <if test="interestType != null">interest_type = #{interestType},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where interest_id = #{interestId}
+    </update>
+
+    <delete id="deleteChatInterestLanguageByInterestId" parameterType="Long">
+        delete from t_chat_interest_language where interest_id = #{interestId}
+    </delete>
+
+    <delete id="deleteChatInterestLanguageByInterestIds" parameterType="String">
+        delete from t_chat_interest_language where interest_id in 
+        <foreach item="interestId" collection="array" open="(" separator="," close=")">
+            #{interestId}
+        </foreach>
+    </delete>
+
+    <!--检测趣语是否唯一-->
+    <select id="checkInterestLanguageUnique" parameterType="ChatInterestLanguage" resultMap="ChatInterestLanguageResult">
+        <include refid="selectChatInterestLanguageVo"/>
+        <where>
+            <if test="interestContent != null  and interestContent != ''"> and interest_content = #{interestContent}</if>
+            <if test="interestType != null  and interestType != ''"> and interest_type = #{interestType}</if>
+        </where>
+    </select>
+</mapper>

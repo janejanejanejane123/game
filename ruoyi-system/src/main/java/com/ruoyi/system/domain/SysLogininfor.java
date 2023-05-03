@@ -1,23 +1,16 @@
 package com.ruoyi.system.domain;
 
+import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.annotation.Excel.ColumnType;
 import com.ruoyi.common.core.domain.BaseEntity;
-import lombok.*;
-
-import java.util.Date;
 
 /**
  * 系统访问记录表 sys_logininfor
  * 
  * @author ruoyi
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@Builder
 public class SysLogininfor extends BaseEntity
 {
     private static final long serialVersionUID = 1L;

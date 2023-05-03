@@ -1,9 +1,9 @@
 package com.ruoyi.system.service;
 
-import com.ruoyi.common.core.domain.entity.SysUser;
-
 import java.util.List;
 import java.util.Map;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
 
 /**
  * 用户 业务层

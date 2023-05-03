@@ -1,18 +1,19 @@
 package com.ruoyi.framework.config;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.annotation.Resource;
-import javax.servlet.DispatcherType;
-
+import com.ruoyi.common.filter.RepeatableFilter;
+import com.ruoyi.common.filter.XssFilter;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.framework.security.filter.DomainGetter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.ruoyi.common.filter.RepeatableFilter;
-import com.ruoyi.common.filter.XssFilter;
-import com.ruoyi.common.utils.StringUtils;
+
+import javax.annotation.Resource;
+import javax.servlet.DispatcherType;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Filter配置
@@ -27,6 +28,10 @@ public class FilterConfig
 
     @Value("${xss.urlPatterns}")
     private String urlPatterns;
+
+
+    @Resource
+    private DomainGetter domainGetter;
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Bean
@@ -56,5 +61,17 @@ public class FilterConfig
         registration.setOrder(FilterRegistrationBean.LOWEST_PRECEDENCE);
         return registration;
     }
+
+
+//    @Bean
+//    public FilterRegistrationBean domainFilter(){
+//        FilterRegistrationBean<DomainFilter> registration = new FilterRegistrationBean<>();
+//        registration.setDispatcherTypes(DispatcherType.REQUEST);
+//        registration.setFilter(new DomainFilter(domainGetter));
+//        registration.addUrlPatterns("/*");
+//        registration.setName("domainFilter");
+//        registration.setOrder(6);
+//        return registration;
+//    }
 
 }

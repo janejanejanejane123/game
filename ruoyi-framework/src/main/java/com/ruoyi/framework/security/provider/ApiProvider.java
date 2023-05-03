@@ -79,7 +79,7 @@ public class ApiProvider implements AuthenticationProvider {
         redisCache.setIfAbsent(apiOnceToken,"onceToken",60,TimeUnit.SECONDS);
 
 
-        //AsyncFactory.kickUser(tokenService,false, loginMember);
+        AsyncFactory.kickUser(tokenService,false, loginMember);
         return authenticationToken;
     }
 

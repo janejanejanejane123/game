@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysPayConfigMapper">
+    
+    <resultMap type="SysPayConfig" id="SysPayConfigResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="siteName"    column="site_name"    />
+        <result property="siteLogo"    column="site_logo"    />
+        <result property="siteIcon"    column="site_icon"    />
+        <result property="siteDesc"    column="site_desc"    />
+        <result property="payName"    column="pay_name"    />
+    </resultMap>
+
+    <sql id="selectSysPayConfigVo">
+        select id, user_id, user_name, site_name, site_logo, site_icon, site_desc, pay_name from sys_pay_config
+    </sql>
+
+    <select id="selectSysPayConfigList" parameterType="SysPayConfig" resultMap="SysPayConfigResult">
+        <include refid="selectSysPayConfigVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="siteName != null  and siteName != ''"> and site_name like concat('%', #{siteName}, '%')</if>
+            <if test="siteLogo != null  and siteLogo != ''"> and site_logo = #{siteLogo}</if>
+            <if test="siteIcon != null  and siteIcon != ''"> and site_icon = #{siteIcon}</if>
+            <if test="siteDesc != null  and siteDesc != ''"> and site_desc = #{siteDesc}</if>
+            <if test="payName != null  and payName != ''"> and pay_name like concat('%', #{payName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectSysPayConfigById" parameterType="Long" resultMap="SysPayConfigResult">
+        <include refid="selectSysPayConfigVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysPayConfig" parameterType="SysPayConfig">
+        insert into sys_pay_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="siteName != null">site_name,</if>
+            <if test="siteLogo != null">site_logo,</if>
+            <if test="siteIcon != null">site_icon,</if>
+            <if test="siteDesc != null">site_desc,</if>
+            <if test="payName != null">pay_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="siteName != null">#{siteName},</if>
+            <if test="siteLogo != null">#{siteLogo},</if>
+            <if test="siteIcon != null">#{siteIcon},</if>
+            <if test="siteDesc != null">#{siteDesc},</if>
+            <if test="payName != null">#{payName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysPayConfig" parameterType="SysPayConfig">
+        update sys_pay_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="siteName != null">site_name = #{siteName},</if>
+            <if test="siteLogo != null">site_logo = #{siteLogo},</if>
+            <if test="siteIcon != null">site_icon = #{siteIcon},</if>
+            <if test="siteDesc != null">site_desc = #{siteDesc},</if>
+            <if test="payName != null">pay_name = #{payName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysPayConfigById" parameterType="Long">
+        delete from sys_pay_config where id = #{id}
+    </delete>
+
+    <delete id="deleteSysPayConfigByIds" parameterType="String">
+        delete from sys_pay_config where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--根据商户ID查询-->
+    <select id="selectSysPayConfigByUserId" parameterType="Long" resultMap="SysPayConfigResult">
+        <include refid="selectSysPayConfigVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+</mapper>

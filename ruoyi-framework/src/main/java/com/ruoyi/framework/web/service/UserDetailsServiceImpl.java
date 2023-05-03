@@ -3,10 +3,12 @@ package com.ruoyi.framework.web.service;
 import com.ruoyi.common.bussiness.RequestContext;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.enums.LoginUserTypeEnum;
 import com.ruoyi.common.enums.UserStatus;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.google.GoogleAuthUtils;
 import com.ruoyi.common.utils.ip.old.OldIpUtils;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
@@ -46,6 +48,8 @@ public class UserDetailsServiceImpl implements UserDetailsService
 
         String userType = user.getUserType();
 
+        LoginUserTypeEnum.test(userType,username);
+
         if (StringUtils.isNull(user))
         {
             log.info("登录用户：{} 不存在.", username);
@@ -66,7 +70,13 @@ public class UserDetailsServiceImpl implements UserDetailsService
 
         }
 
+        // 谷歌验证码开关.
+        boolean googleCodeOnOff = configService.selectGoogleCodeOnOff();
 
+        if (googleCodeOnOff) {
+            //验证谷歌二维码.
+            validateGoogleCode(user.getSecret(),googleCode);
+        }
         passwordService.validate(user);
 
 
@@ -81,4 +91,19 @@ public class UserDetailsServiceImpl implements UserDetailsService
         return new LoginUser(user.getUserId(), user.getDeptId(), user, permissionService.getMenuPermission(user));
     }
 
+
+    /**
+     * 校验谷歌验证码
+     *
+     * @param secret 谷歌验证器密钥
+     * @param googleCode 谷歌验证码
+     */
+    private void validateGoogleCode(String secret, Long googleCode)
+    {
+        boolean flag = GoogleAuthUtils.verify(secret,googleCode);
+        if (!flag) {
+//            throw new GoogleCodeException();
+            throw new ServiceException("谷歌验证码错误!");
+        }
+    }
 }

@@ -1,9 +1,6 @@
 package com.ruoyi.system.domain.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
-
 import java.util.List;
 
 /**
@@ -11,11 +8,6 @@ import java.util.List;
  * 
  * @author ruoyi
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@Builder
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class RouterVo
 {

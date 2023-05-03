@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.payment.mapper.DfReportMapper">
+    
+    <resultMap type="com.ruoyi.payment.domain.DfReport" id="DfReportResult">
+        <result property="id"    column="id"    />
+        <result property="uid"    column="uid"    />
+        <result property="name"    column="name"    />
+        <result property="period"    column="period"    />
+        <result property="refId"    column="ref_id"    />
+        <result property="money"    column="money"    />
+        <result property="rate"    column="rate"    />
+        <result property="moneyBack"    column="money_back"    />
+    </resultMap>
+
+    <sql id="selectDfReportVo">
+        select id, uid, name, period, ref_id, money, rate, money_back from t_df_report
+    </sql>
+
+    <select id="selectDfReportList" parameterType="com.ruoyi.payment.domain.DfReport" resultMap="DfReportResult">
+        <include refid="selectDfReportVo"/>
+        <where>  
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="name != null  and name != ''"> and name = #{name}</if>
+            <if test="period != null "> and period = #{period}</if>
+            <if test="startDate != null "> and period &gt;= #{startDate}</if>
+            <if test="endDate != null "> and period &lt; #{endDate}</if>
+            <if test="refId != null  and refId != ''"> and ref_id = #{refId}</if>
+            <if test="money != null "> and money = #{money}</if>
+            <if test="rate != null "> and rate = #{rate}</if>
+            <if test="moneyBack != null "> and money_back = #{moneyBack}</if>
+            <if test="uids != null ">
+                and uid in
+                <foreach collection="uids" item="userId" open="(" separator="," close=")">
+                    #{userId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectDfReportById" parameterType="Long" resultMap="DfReportResult">
+        <include refid="selectDfReportVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectSum" resultType="java.util.Map">
+        select sum(money) as money,sum(money_back) as water from t_df_report where 1 = 1
+        <if test="name != null  and name != ''"> and name = #{name}</if>
+        <if test="startDate != null "> and period &gt;= #{startDate}</if>
+        <if test="endDate != null "> and period &lt; #{endDate}</if>
+        <if test="uids != null ">
+            and uid in
+            <foreach collection="uids" item="userId" open="(" separator="," close=")">
+                #{userId}
+            </foreach>
+        </if>
+    </select>
+
+    <insert id="insertDfReport" parameterType="com.ruoyi.payment.domain.DfReport">
+        insert into t_df_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="uid != null">uid,</if>
+            <if test="name != null">name,</if>
+            <if test="period != null">period,</if>
+            <if test="refId != null">ref_id,</if>
+            <if test="money != null">money,</if>
+            <if test="rate != null">rate,</if>
+            <if test="moneyBack != null">money_back,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="uid != null">#{uid},</if>
+            <if test="name != null">#{name},</if>
+            <if test="period != null">#{period},</if>
+            <if test="refId != null">#{refId},</if>
+            <if test="money != null">#{money},</if>
+            <if test="rate != null">#{rate},</if>
+            <if test="moneyBack != null">#{moneyBack},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDfReport" parameterType="com.ruoyi.payment.domain.DfReport">
+        update t_df_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null">uid = #{uid},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="period != null">period = #{period},</if>
+            <if test="refId != null">ref_id = #{refId},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="rate != null">rate = #{rate},</if>
+            <if test="moneyBack != null">money_back = #{moneyBack},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDfReportById" parameterType="Long">
+        delete from t_df_report where id = #{id}
+    </delete>
+
+    <delete id="deleteDfReportByIds" parameterType="String">
+        delete from t_df_report where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

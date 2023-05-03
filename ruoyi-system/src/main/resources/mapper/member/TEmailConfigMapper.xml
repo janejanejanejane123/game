@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.member.mapper.TEmailConfigMapper">
+    
+    <resultMap type="com.ruoyi.member.domain.TEmailConfig" id="TEmailConfigResult">
+        <result property="id"    column="id"    />
+        <result property="content"    column="content"    />
+        <result property="emailAccount"    column="email_account"    />
+        <result property="emailPassword"    column="email_password"    />
+        <result property="outTime"    column="out_time"    />
+        <result property="host"    column="host"    />
+        <result property="port"    column="port"    />
+        <result property="subject"    column="subject"    />
+        <result property="status"    column="status"    />
+        <result property="type"    column="type"    />
+        <result property="weight"    column="weight"    />
+    </resultMap>
+
+    <sql id="selectTEmailConfigVo">
+        select id, content, email_account, email_password, out_time, host, port, subject, status, type, weight from t_email_config
+    </sql>
+
+    <select id="findEmail" parameterType="com.ruoyi.member.domain.TEmailConfig" resultMap="TEmailConfigResult">
+        <include refid="selectTEmailConfigVo"/>
+        where type in (#{type},0)
+    </select>
+
+    <select id="selectTEmailConfigList" parameterType="com.ruoyi.member.domain.TEmailConfig" resultMap="TEmailConfigResult">
+        <include refid="selectTEmailConfigVo"/>
+        <where>  
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="emailAccount != null  and emailAccount != ''"> and email_account = #{emailAccount}</if>
+            <if test="emailPassword != null  and emailPassword != ''"> and email_password = #{emailPassword}</if>
+            <if test="outTime != null "> and out_time = #{outTime}</if>
+            <if test="host != null  and host != ''"> and host = #{host}</if>
+            <if test="port != null  and port != ''"> and port = #{port}</if>
+            <if test="subject != null  and subject != ''"> and subject = #{subject}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="weight != null "> and weight = #{weight}</if>
+        </where>
+        order by weight desc
+    </select>
+    
+    <select id="selectTEmailConfigById" parameterType="java.lang.Long" resultMap="TEmailConfigResult">
+        <include refid="selectTEmailConfigVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTEmailConfig" parameterType="com.ruoyi.member.domain.TEmailConfig">
+        insert into t_email_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="emailAccount != null and emailAccount != ''">email_account,</if>
+            <if test="emailPassword != null and emailPassword != ''">email_password,</if>
+            <if test="outTime != null">out_time,</if>
+            <if test="host != null and host != ''">host,</if>
+            <if test="port != null and port != ''">port,</if>
+            <if test="subject != null and subject != ''">subject,</if>
+            <if test="status != null">status,</if>
+            <if test="type != null">type,</if>
+            <if test="weight != null">weight,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="emailAccount != null and emailAccount != ''">#{emailAccount},</if>
+            <if test="emailPassword != null and emailPassword != ''">#{emailPassword},</if>
+            <if test="outTime != null">#{outTime},</if>
+            <if test="host != null and host != ''">#{host},</if>
+            <if test="port != null and port != ''">#{port},</if>
+            <if test="subject != null and subject != ''">#{subject},</if>
+            <if test="status != null">#{status},</if>
+            <if test="type != null">#{type},</if>
+            <if test="weight != null">#{weight},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTEmailConfig" parameterType="com.ruoyi.member.domain.TEmailConfig">
+        update t_email_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="emailAccount != null and emailAccount != ''">email_account = #{emailAccount},</if>
+            <if test="emailPassword != null and emailPassword != ''">email_password = #{emailPassword},</if>
+            <if test="outTime != null">out_time = #{outTime},</if>
+            <if test="host != null and host != ''">host = #{host},</if>
+            <if test="port != null and port != ''">port = #{port},</if>
+            <if test="subject != null and subject != ''">subject = #{subject},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="weight != null">weight = #{weight},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTEmailConfigById" parameterType="java.lang.Long">
+        delete from t_email_config where id = #{id}
+    </delete>
+
+    <delete id="deleteTEmailConfigByIds" parameterType="java.lang.String">
+        delete from t_email_config where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

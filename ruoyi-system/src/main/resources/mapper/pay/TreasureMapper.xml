@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.pay.mapper.TreasureMapper">
+
+    <resultMap type="com.ruoyi.pay.domain.Treasure" id="TreasureResult">
+        <result property="id"    column="id"    />
+        <result property="uid"    column="uid"    />
+        <result property="amount"    column="amount"    />
+        <result property="oldMoney"    column="old_money"    />
+        <result property="newMoney"    column="new_money"    />
+        <result property="number"    column="number"    />
+        <result property="type"    column="type"    />
+        <result property="rmk"    column="rmk"    />
+        <result property="addTime"    column="add_time"    />
+        <result property="name"    column="name"    />
+        <result property="sysname"    column="sysname"    />
+        <result property="ip"    column="ip"    />
+        <result property="fee"    column="fee"    />
+        <result property="accountType"    column="account_type"    />
+        <result property="merId"    column="mer_id"    />
+    </resultMap>
+
+    <sql id="selectTreasureVo">
+        select id, uid, amount, old_money, new_money, number, type, rmk, add_time, name, sysname, ip, fee, account_type,mer_id from t_treasure
+    </sql>
+
+    <select id="selectTreasureList" parameterType="com.ruoyi.pay.domain.Treasure" resultMap="TreasureResult">
+        <include refid="selectTreasureVo"/>
+        <where>
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="oldMoney != null "> and old_money = #{oldMoney}</if>
+            <if test="newMoney != null "> and new_money = #{newMoney}</if>
+            <if test="number != null  and number != ''"> and number = #{number}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="rmk != null  and rmk != ''"> and rmk = #{rmk}</if>
+            <if test="addTime != null "> and add_time &gt;= #{addTime}</if>
+            <if test="name != null  and name != ''"> and name = #{name}</if>
+            <if test="sysname != null  and sysname != ''"> and sysname = #{sysname}</if>
+            <if test="ip != null  and ip != ''"> and ip = #{ip}</if>
+            <if test="fee != null "> and fee = #{fee}</if>
+            <if test="accountType != null  and accountType != ''"> and account_type = #{accountType}</if>
+            <if test="startDate != null "> and add_time  &gt;= #{startDate}</if>
+            <if test="endDate != null  "> and add_time  &lt; #{endDate}</if>
+            <if test="merId != null  "> and mer_id  = #{merId}</if>
+
+
+        </where>
+        order by add_time desc
+    </select>
+
+    <select id="selectTreasureSum" parameterType="com.ruoyi.pay.domain.Treasure" resultType="map">
+        select sum(amount) as amountSum,sum(fee) as feeSum  from t_treasure
+        <where>
+            <if test="uid != null "> and uid = #{uid}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="oldMoney != null "> and old_money = #{oldMoney}</if>
+            <if test="newMoney != null "> and new_money = #{newMoney}</if>
+            <if test="number != null  and number != ''"> and number = #{number}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="rmk != null  and rmk != ''"> and rmk = #{rmk}</if>
+            <if test="addTime != null "> and add_time &gt;= #{addTime}</if>
+            <if test="name != null  and name != ''"> and name = #{name}</if>
+            <if test="sysname != null  and sysname != ''"> and sysname = #{sysname}</if>
+            <if test="ip != null  and ip != ''"> and ip = #{ip}</if>
+            <if test="fee != null "> and fee = #{fee}</if>
+            <if test="accountType != null  and accountType != ''"> and account_type = #{accountType}</if>
+            <if test="startDate != null "> and add_time  &gt;= #{startDate}</if>
+            <if test="endDate != null  "> and add_time  &lt;= #{endDate}</if>
+            <if test="merId != null  "> and mer_id  = #{merId}</if>
+        </where>
+    </select>
+
+    <select id="selectTreasureById" parameterType="Long" resultMap="TreasureResult">
+        <include refid="selectTreasureVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTreasure" parameterType="com.ruoyi.pay.domain.Treasure">
+        insert into t_treasure
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="uid != null">uid,</if>
+            <if test="amount != null">amount,</if>
+            <if test="oldMoney != null">old_money,</if>
+            <if test="newMoney != null">new_money,</if>
+            <if test="number != null and number != ''">number,</if>
+            <if test="type != null">type,</if>
+            <if test="rmk != null">rmk,</if>
+            <if test="addTime != null">add_time,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="sysname != null">sysname,</if>
+            <if test="ip != null">ip,</if>
+            <if test="fee != null">fee,</if>
+            <if test="accountType != null">account_type,</if>
+            <if test="merId != null  "> mer_id , </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="uid != null">#{uid},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="oldMoney != null">#{oldMoney},</if>
+            <if test="newMoney != null">#{newMoney},</if>
+            <if test="number != null and number != ''">#{number},</if>
+            <if test="type != null">#{type},</if>
+            <if test="rmk != null">#{rmk},</if>
+            <if test="addTime != null">#{addTime},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="sysname != null">#{sysname},</if>
+            <if test="ip != null">#{ip},</if>
+            <if test="fee != null">#{fee},</if>
+            <if test="accountType != null">#{accountType},</if>
+            <if test="merId != null  ">  #{merId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTreasure" parameterType="com.ruoyi.pay.domain.Treasure">
+        update t_treasure
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null">uid = #{uid},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="oldMoney != null">old_money = #{oldMoney},</if>
+            <if test="newMoney != null">new_money = #{newMoney},</if>
+            <if test="number != null and number != ''">number = #{number},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="rmk != null">rmk = #{rmk},</if>
+            <if test="addTime != null">add_time = #{addTime},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="sysname != null">sysname = #{sysname},</if>
+            <if test="ip != null">ip = #{ip},</if>
+            <if test="fee != null">fee = #{fee},</if>
+            <if test="accountType != null">account_type = #{accountType},</if>
+            <if test="merId != null  "> and mer_id  = #{merId}</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTreasureById" parameterType="Long">
+        delete from t_treasure where id = #{id}
+    </delete>
+
+    <delete id="deleteTreasureByIds" parameterType="String">
+        delete from t_treasure where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

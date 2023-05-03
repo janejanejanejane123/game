@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chatroom.mapper.ChatSensitiveWordMapper">
+    
+    <resultMap type="com.ruoyi.chatroom.domain.ChatSensitiveWord" id="ChatSensitiveWordResult">
+        <result property="id"    column="id"    />
+        <result property="sensitiveWord"    column="sensitive_word"/>
+        <result property="filterType"    column="filter_type"/>
+        <result property="replaceStr"    column="replace_str"/>
+        <result property="useType"    column="use_type"/>
+        <result property="strType"    column="str_type"/>
+        <result property="createBy"    column="create_by"/>
+        <result property="createTime"    column="create_time"/>
+        <result property="prefix"    column="prefix"/>
+        <result property="suffix"    column="suffix"/>
+        <result property="prefixLength"    column="prefix_length"/>
+        <result property="suffixLength"    column="suffix_length"/>
+        <result property="status"    column="status"/>
+        <result property="remark"    column="remark"/>
+    </resultMap>
+
+    <sql id="selectChatSensitiveWordVo">
+        select id, sensitive_word, filter_type, replace_str, use_type, str_type, create_by, create_time, prefix, suffix, prefix_length, suffix_length, status, remark from t_chat_sensitive_word
+    </sql>
+
+    <select id="selectChatSensitiveWordList" parameterType="com.ruoyi.chatroom.domain.ChatSensitiveWord" resultMap="ChatSensitiveWordResult">
+        <include refid="selectChatSensitiveWordVo"/>
+        <where>
+            <if test="sensitiveWord != null  and sensitiveWord != ''"> and sensitive_word like concat('%', #{sensitiveWord}, '%')</if>
+            <if test="filterType != null  and filterType != ''"> and filter_type = #{filterType}</if>
+            <if test="replaceStr != null  and replaceStr != ''"> and replace_str = #{replaceStr}</if>
+            <if test="useType != null  and useType != ''"> and use_type = #{useType}</if>
+            <if test="strType != null  and strType != ''"> and str_type = #{strType}</if>
+            <if test="prefix != null  and prefix != ''"> and prefix = #{prefix}</if>
+            <if test="suffix != null  and suffix != ''"> and suffix = #{suffix}</if>
+            <if test="prefixLength != null "> and prefix_length = #{prefixLength}</if>
+            <if test="suffixLength != null "> and suffix_length = #{suffixLength}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="remark != null  and remark != ''"> and remark = #{remark}</if>
+        </where>
+    </select>
+    
+    <select id="selectChatSensitiveWordById" parameterType="java.lang.Long" resultMap="ChatSensitiveWordResult">
+        <include refid="selectChatSensitiveWordVo"/>
+        where id = #{id}
+    </select>
+
+
+    <insert id="batchInsertChatSensitiveWord">
+        insert into t_chat_sensitive_word (
+         id,
+         sensitive_word,
+         filter_type,
+         replace_str,
+         use_type,
+         str_type,
+         create_by,
+         create_time,
+         prefix,
+         suffix,
+         prefix_length,
+         suffix_length,
+         status,
+         remark
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id},
+            #{item.sensitiveWord},
+            #{item.filterType},
+            #{item.replaceStr},
+            #{item.useType},
+            #{item.strType},
+            #{item.createBy},
+            #{item.createTime},
+            #{item.prefix},
+            #{item.suffix},
+            #{item.prefixLength},
+            #{item.suffixLength},
+            #{item.status},
+            #{item.remark})
+        </foreach>
+    </insert>
+        
+    <insert id="insertChatSensitiveWord" parameterType="com.ruoyi.chatroom.domain.ChatSensitiveWord">
+        insert into t_chat_sensitive_word
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="sensitiveWord != null">sensitive_word,</if>
+            <if test="filterType != null">filter_type,</if>
+            <if test="replaceStr != null">replace_str,</if>
+            <if test="useType != null">use_type,</if>
+            <if test="strType != null">str_type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="prefix != null">prefix,</if>
+            <if test="suffix != null">suffix,</if>
+            <if test="prefixLength != null">prefix_length,</if>
+            <if test="suffixLength != null">suffix_length,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="sensitiveWord != null">#{sensitiveWord},</if>
+            <if test="filterType != null">#{filterType},</if>
+            <if test="replaceStr != null">#{replaceStr},</if>
+            <if test="useType != null">#{useType},</if>
+            <if test="strType != null">#{strType},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="prefix != null">#{prefix},</if>
+            <if test="suffix != null">#{suffix},</if>
+            <if test="prefixLength != null">#{prefixLength},</if>
+            <if test="suffixLength != null">#{suffixLength},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateChatSensitiveWord" parameterType="com.ruoyi.chatroom.domain.ChatSensitiveWord">
+        update t_chat_sensitive_word
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sensitiveWord != null">sensitive_word = #{sensitiveWord},</if>
+            <if test="filterType != null">filter_type = #{filterType},</if>
+            <if test="replaceStr != null">replace_str = #{replaceStr},</if>
+            <if test="useType != null">use_type = #{useType},</if>
+            <if test="strType != null">str_type = #{strType},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="prefix != null">prefix = #{prefix},</if>
+            <if test="suffix != null">suffix = #{suffix},</if>
+            <if test="prefixLength != null">prefix_length = #{prefixLength},</if>
+            <if test="suffixLength != null">suffix_length = #{suffixLength},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteChatSensitiveWordById" parameterType="java.lang.Long">
+        delete from t_chat_sensitive_word where id = #{id}
+    </delete>
+
+    <delete id="deleteChatSensitiveWordByIds" parameterType="java.lang.String">
+        delete from t_chat_sensitive_word where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--检测敏感词是否唯一-->
+    <select id="checkSensitiveWordUnique" parameterType="com.ruoyi.chatroom.domain.ChatSensitiveWord" resultMap="ChatSensitiveWordResult">
+        <include refid="selectChatSensitiveWordVo"/>
+        <where>
+            <if test="useType != null  and useType != ''"> and use_type = #{useType}</if>
+            <if test="sensitiveWord != null  and sensitiveWord != ''"> and sensitive_word = #{sensitiveWord}</if>
+        </where>
+    </select>
+
+    <select id="count" parameterType="com.ruoyi.chatroom.domain.ChatSensitiveWord" resultType="java.lang.Integer">
+        select count(1) from t_chat_sensitive_word
+        <where>
+            <if test="sensitiveWord != null  and sensitiveWord != ''"> and sensitive_word = #{sensitiveWord}</if>
+            <if test="filterType != null  and filterType != ''"> and filter_type = #{filterType}</if>
+            <if test="replaceStr != null  and replaceStr != ''"> and replace_str = #{replaceStr}</if>
+            <if test="useType != null  and useType != ''"> and use_type = #{useType}</if>
+            <if test="strType != null  and strType != ''"> and str_type = #{strType}</if>
+            <if test="prefix != null  and prefix != ''"> and prefix = #{prefix}</if>
+            <if test="suffix != null  and suffix != ''"> and suffix = #{suffix}</if>
+            <if test="prefixLength != null "> and prefix_length = #{prefixLength}</if>
+            <if test="suffixLength != null "> and suffix_length = #{suffixLength}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="remark != null  and remark != ''"> and remark = #{remark}</if>
+        </where>
+
+    </select>
+</mapper>

@@ -8,10 +8,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ruoyi-framework" />
+        <module name="ruoyi-exchange" />
         <module name="ruoyi-system" />
-        <module name="ruoyi-game (2)" />
-        <module name="ruoyi-game (1)" />
-        <module name="ruoyi-game" />
+        <module name="ruoyi-chatroom" />
         <module name="ruoyi-common" />
         <module name="ruoyi-generator" />
         <module name="ruoyi-quartz" />
@@ -19,20 +18,9 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="api_gateway" target="1.8" />
-      <module name="common" target="1.8" />
-      <module name="common_utils" target="1.8" />
-      <module name="game_parent" target="1.8" />
-      <module name="infrastructure" target="1.8" />
-      <module name="ruoyi-chatroom" target="1.5" />
-      <module name="servcie" target="1.8" />
-      <module name="service_acl" target="1.8" />
-      <module name="service_base" target="1.8" />
-      <module name="service_game" target="1.8" />
-      <module name="service_order" target="1.8" />
-      <module name="service_oss" target="1.8" />
-      <module name="service_ucenter" target="1.8" />
-      <module name="spring_security" target="1.8" />
+      <module name="ruoyi-admin (2)" target="1.5" />
+      <module name="ruoyi-chatroom (2)" target="1.8" />
+      <module name="ruoyi-game" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

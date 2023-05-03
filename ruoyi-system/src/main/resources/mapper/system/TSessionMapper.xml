@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TSessionMapper">
+    
+    <resultMap type="com.ruoyi.system.domain.TSession" id="TSessionResult">
+        <result property="id"    column="id"    />
+        <result property="appVersion"    column="app_version"    />
+        <result property="bindTime"    column="bind_time"    />
+        <result property="channel"    column="channel"    />
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="host"    column="host"    />
+        <result property="language"    column="language"    />
+        <result property="latitude"    column="latitude"    />
+        <result property="location"    column="location"    />
+        <result property="longitude"    column="longitude"    />
+        <result property="nid"    column="nid"    />
+        <result property="osVersion"    column="os_version"    />
+        <result property="state"    column="state"    />
+        <result property="uid"    column="uid"    />
+    </resultMap>
+
+    <sql id="selectTSessionVo">
+        select id, app_version, bind_time, channel, device_id, device_name, host, language, latitude, location, longitude, nid, os_version, state, uid from t_session
+    </sql>
+
+    <select id="selectTSessionList" parameterType="com.ruoyi.system.domain.TSession" resultMap="TSessionResult">
+        <include refid="selectTSessionVo"/>
+        <where>  
+            <if test="appVersion != null  and appVersion != ''"> and app_version = #{appVersion}</if>
+            <if test="bindTime != null "> and bind_time = #{bindTime}</if>
+            <if test="channel != null  and channel != ''"> and channel = #{channel}</if>
+            <if test="deviceId != null  and deviceId != ''"> and device_id = #{deviceId}</if>
+            <if test="deviceName != null  and deviceName != ''"> and device_name = #{deviceName}</if>
+            <if test="host != null  and host != ''"> and host = #{host}</if>
+            <if test="language != null  and language != ''"> and language = #{language}</if>
+            <if test="latitude != null "> and latitude = #{latitude}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
+            <if test="longitude != null "> and longitude = #{longitude}</if>
+            <if test="nid != null  and nid != ''"> and nid = #{nid}</if>
+            <if test="osVersion != null  and osVersion != ''"> and os_version = #{osVersion}</if>
+            <if test="state != null "> and state = #{state}</if>
+            <if test="uid != null  and uid != ''"> and uid like concat(#{uid},'%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTSessionById" parameterType="Long" resultMap="TSessionResult">
+        <include refid="selectTSessionVo"/>
+        where id = #{id}
+    </select>
+    <select id="findAll" resultType="com.ruoyi.system.domain.TSession">
+        select <include refid="selectTSessionVo"/> from t_session
+    </select>
+
+    <insert id="insertTSession" parameterType="com.ruoyi.system.domain.TSession" useGeneratedKeys="true" keyProperty="id">
+        insert into t_session
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="appVersion != null">app_version,</if>
+            <if test="bindTime != null">bind_time,</if>
+            <if test="channel != null">channel,</if>
+            <if test="deviceId != null">device_id,</if>
+            <if test="deviceName != null">device_name,</if>
+            <if test="host != null">host,</if>
+            <if test="language != null">language,</if>
+            <if test="latitude != null">latitude,</if>
+            <if test="location != null">location,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="nid != null">nid,</if>
+            <if test="osVersion != null">os_version,</if>
+            <if test="state != null">state,</if>
+            <if test="uid != null and uid != ''">uid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="appVersion != null">#{appVersion},</if>
+            <if test="bindTime != null">#{bindTime},</if>
+            <if test="channel != null">#{channel},</if>
+            <if test="deviceId != null">#{deviceId},</if>
+            <if test="deviceName != null">#{deviceName},</if>
+            <if test="host != null">#{host},</if>
+            <if test="language != null">#{language},</if>
+            <if test="latitude != null">#{latitude},</if>
+            <if test="location != null">#{location},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="nid != null">#{nid},</if>
+            <if test="osVersion != null">#{osVersion},</if>
+            <if test="state != null">#{state},</if>
+            <if test="uid != null and uid != ''">#{uid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTSession" parameterType="com.ruoyi.system.domain.TSession">
+        update t_session
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="appVersion != null">app_version = #{appVersion},</if>
+            <if test="bindTime != null">bind_time = #{bindTime},</if>
+            <if test="channel != null">channel = #{channel},</if>
+            <if test="deviceId != null">device_id = #{deviceId},</if>
+            <if test="deviceName != null">device_name = #{deviceName},</if>
+            <if test="host != null">host = #{host},</if>
+            <if test="language != null">language = #{language},</if>
+            <if test="latitude != null">latitude = #{latitude},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="longitude != null">longitude = #{longitude},</if>
+            <if test="nid != null">nid = #{nid},</if>
+            <if test="osVersion != null">os_version = #{osVersion},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="uid != null and uid != ''">uid = #{uid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateState">
+        update t_session set state = #{state} where uid = #{uid}
+    </update>
+
+    <delete id="deleteTSessionByUid" parameterType="string">
+        delete from t_session where uid = #{uid}
+    </delete>
+
+
+    <delete id="deleteByUIdAndNid">
+        delete from t_session where uid = #{uid} and nid = #{nid}
+    </delete>
+
+    <delete id="deleteByHost" parameterType="string">
+        delete from t_session where host = #{host}
+    </delete>
+
+    <delete id="deleteTSessionByIds" parameterType="String">
+        delete from t_session where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.member.mapper.TUserDataConfigMapper">
+    
+    <resultMap type="com.ruoyi.member.domain.TUserDataConfig" id="TUserDataConfigResult">
+        <result property="uid"    column="uid"    />
+        <result property="payPasswordForSell"    column="pay_password_for_sell"    />
+        <result property="emailForSell"    column="email_for_sell"    />
+    </resultMap>
+
+    <sql id="selectTUserDataConfigVo">
+        select uid, pay_password_for_sell, email_for_sell from t_user_data_config
+    </sql>
+
+    <select id="selectTUserDataConfigList" parameterType="com.ruoyi.member.domain.TUserDataConfig" resultMap="TUserDataConfigResult">
+        <include refid="selectTUserDataConfigVo"/>
+        <where>  
+            <if test="payPasswordForSell != null "> and pay_password_for_sell = #{payPasswordForSell}</if>
+            <if test="emailForSell != null "> and email_for_sell = #{emailForSell}</if>
+        </where>
+    </select>
+    
+    <select id="selectTUserDataConfigByUid" parameterType="java.lang.Long" resultMap="TUserDataConfigResult">
+        <include refid="selectTUserDataConfigVo"/>
+        where uid = #{uid}
+    </select>
+        
+    <insert id="insertTUserDataConfig" parameterType="com.ruoyi.member.domain.TUserDataConfig">
+        insert into t_user_data_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uid != null">uid,</if>
+            <if test="payPasswordForSell != null">pay_password_for_sell,</if>
+            <if test="emailForSell != null">email_for_sell,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uid != null">#{uid},</if>
+            <if test="payPasswordForSell != null">#{payPasswordForSell},</if>
+            <if test="emailForSell != null">#{emailForSell},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTUserDataConfig" parameterType="com.ruoyi.member.domain.TUserDataConfig">
+        update t_user_data_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="payPasswordForSell != null">pay_password_for_sell = #{payPasswordForSell},</if>
+            <if test="emailForSell != null">email_for_sell = #{emailForSell},</if>
+        </trim>
+        where uid = #{uid}
+    </update>
+
+    <delete id="deleteTUserDataConfigByUid" parameterType="java.lang.Long">
+        delete from t_user_data_config where uid = #{uid}
+    </delete>
+
+    <delete id="deleteTUserDataConfigByUids" parameterType="java.lang.String">
+        delete from t_user_data_config where uid in 
+        <foreach item="uid" collection="array" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+    </delete>
+</mapper>

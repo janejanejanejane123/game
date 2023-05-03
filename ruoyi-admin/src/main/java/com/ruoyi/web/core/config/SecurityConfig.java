@@ -1,13 +1,25 @@
 package com.ruoyi.web.core.config;
 
+import com.ruoyi.common.sensitive.service.SensitiveWordRepository;
+import com.ruoyi.common.sensitive.service.SensitiveWordService;
+import com.ruoyi.common.serializer.ByteRedisSerializer;
+import com.ruoyi.common.utils.autoId.SnowflakeIdUtils;
 import com.ruoyi.framework.config.properties.PermitAllUrlProperties;
+import com.ruoyi.framework.security.filter.DomainFilter;
+import com.ruoyi.framework.security.filter.DomainGetter;
 import com.ruoyi.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.ruoyi.framework.security.handle.AuthenticationEntryPointImpl;
 import com.ruoyi.framework.security.handle.LogoutSuccessHandlerImpl;
+import com.ruoyi.settings.domain.DomainManage;
+import com.ruoyi.settings.service.IDomainManageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.DefaultParameterNameDiscoverer;
-import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.core.Ordered;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -22,42 +34,48 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.filter.CorsFilter;
 
 import javax.annotation.Resource;
+import javax.servlet.DispatcherType;
 
 /**
  * spring security配置
- *
+ * 
  * @author ruoyi
  */
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter
+{
     /**
      * 自定义用户认证逻辑
      */
     @Resource
     private UserDetailsService proxy;
-
+    
     /**
      * 认证失败处理类
      */
-    @Resource
+    @Autowired
     private AuthenticationEntryPointImpl unauthorizedHandler;
 
     /**
      * 退出处理类
      */
-    @Resource
+    @Autowired
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
 
     /**
      * token认证过滤器
      */
-    @Resource
+    @Autowired
     private JwtAuthenticationTokenFilter authenticationTokenFilter;
 
+
+    @Resource
+    private IDomainManageService domainManageService;
+    
     /**
      * 跨域过滤器
      */
-    @Resource
+    @Autowired
     private CorsFilter corsFilter;
 
     /**
@@ -65,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Autowired
     private PermitAllUrlProperties permitAllUrl;
-
+    
     /**
      * 解决 无法直接注入 AuthenticationManager
      *
@@ -74,15 +92,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean
     @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
+    public AuthenticationManager authenticationManagerBean() throws Exception
+    {
         return super.authenticationManagerBean();
     }
 
 
-    @Bean(name = "parameterNameDiscoverer")
-    public ParameterNameDiscoverer parameterNameDiscoverer() {
-        return new DefaultParameterNameDiscoverer();
-    }
+
+//    @Bean
+//    public FilterRegistrationBean userTypeFilter(){
+//        FilterRegistrationBean<DomainFilter> registration = new FilterRegistrationBean<>();
+//        registration.setDispatcherTypes(DispatcherType.REQUEST);
+//        registration.setFilter();
+//        registration.addUrlPatterns("/*");
+//        registration.setName("typeFilter");
+//        registration.setOrder(Ordered.LOWEST_PRECEDENCE-2);
+//        return registration;
+//    }
+
 
     /**
      * anyRequest          |   匹配所有请求路径
@@ -100,7 +127,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * authenticated       |   用户登录后可访问
      */
     @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
+    protected void configure(HttpSecurity httpSecurity) throws Exception
+    {
         // 注解标记允许匿名访问的url
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = httpSecurity.authorizeRequests();
         permitAllUrl.getUrls().forEach(url -> registry.antMatchers(url).permitAll());
@@ -116,8 +144,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
                 .antMatchers(
-                        "/**").permitAll()
+                        "/login",
+                        "/captchaImage4Reg",
+                        "/register",
+                        "/captchaImage",
+                        "/api/*",
+                        "/api/queryRecharge/*",
+                        "/system/website/getSysWebsiteFTP").anonymous()
                 // 静态资源，可匿名访问
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/",
+                        "/*.html",
+                        "/**/*.html",
+                        "/**/*.css",
+                        "/**/*.js",
+                        "/profile/**"
+                        ).permitAll()
+                .antMatchers("/swagger-ui.html",
+                        "/swagger-resources/**",
+                        "/webjars/**",
+                        "/*/api-docs",
+                        "/druid/**"
+                        ).permitAll()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
                 .and()
@@ -135,15 +184,52 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * 强散列哈希加密实现
      */
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+    public BCryptPasswordEncoder bCryptPasswordEncoder()
+    {
         return new BCryptPasswordEncoder();
     }
+
+
+
+    @Bean
+    public DomainGetter domainGetter(){
+        return host -> domainManageService.selectDomainByHost(host,(short)2);
+    }
+
+
 
     /**
      * 身份认证接口
      */
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception
+    {
         auth.userDetailsService(proxy).passwordEncoder(bCryptPasswordEncoder());
+    }
+
+    /**
+     * 敏感词库
+     * @param snowflakeIdFactory
+     * @param redisConnectionFactory
+     * @param sensitiveService
+     * @return
+     */
+    @Bean
+    public SensitiveWordService sensitiveWordService(SnowflakeIdUtils snowflakeIdFactory, RedisConnectionFactory redisConnectionFactory, SensitiveWordRepository sensitiveService){
+        RedisTemplate<String, byte[]> template = new RedisTemplate<>();
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+
+        ByteRedisSerializer byteRedisSerializer = new ByteRedisSerializer();
+        // key采用String的序列化方式
+        template.setKeySerializer(stringRedisSerializer);
+        // hash的key也采用String的序列化方式
+        template.setHashKeySerializer(stringRedisSerializer);
+        template.setConnectionFactory(redisConnectionFactory);
+        // value序列化方式采用jackson
+        template.setValueSerializer(byteRedisSerializer);
+        // hash的value序列化方式采用jackson
+        template.setHashValueSerializer(byteRedisSerializer);
+        template.afterPropertiesSet();
+        return new SensitiveWordService(true, template, snowflakeIdFactory, sensitiveService);
     }
 }
