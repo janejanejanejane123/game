@@ -22,11 +22,11 @@ public class ApiDetail extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /** id */
     @TableId
     private Long id;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    /** api_key */
+    @Excel(name = "api_key")
     private String apiKey;
 }

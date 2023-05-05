@@ -8,7 +8,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ruoyi-framework" />
-        <module name="ruoyi-exchange" />
         <module name="ruoyi-system" />
         <module name="ruoyi-chatroom" />
         <module name="ruoyi-common" />
@@ -20,6 +19,7 @@
     <bytecodeTargetLevel>
       <module name="ruoyi-admin (2)" target="1.5" />
       <module name="ruoyi-chatroom (2)" target="1.8" />
+      <module name="ruoyi-exchange" target="1.8" />
       <module name="ruoyi-game" target="1.8" />
     </bytecodeTargetLevel>
   </component>

@@ -31,32 +31,32 @@ public class GameBet extends BaseEntity {
     private Long id;
 
     /**
-     * $column.columnComment
+     * 投注时间
      */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private Date dateTime;
+    @Excel(name = "bet_time")
+    private Date betTime;
 
     /**
-     * $column.columnComment
+     * 订单编号
      */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "order_no")
     private Long orderNo;
 
     /**
-     * $column.columnComment
+     * 投注金额
      */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "bet_money")
     private String betMoney;
 
     /**
-     * $column.columnComment
+     * 账号
      */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "account")
     private String account;
 
     /**
-     * $column.columnComment
+     * 货币
      */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private String unit;
+    @Excel(name = "currency")
+    private String currency;
 }

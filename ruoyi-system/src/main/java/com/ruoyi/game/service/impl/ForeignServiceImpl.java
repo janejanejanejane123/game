@@ -10,7 +10,6 @@ import com.ruoyi.game.domain.response.BetsTakeEffectResponse;
 import com.ruoyi.game.domain.response.ChangeBetMoneyResponse;
 import com.ruoyi.game.service.IAccountService;
 import com.ruoyi.game.service.IForeignSesrvice;
-import com.ruoyi.game.service.IGameConfigService;
 import com.ruoyi.game.service.IGameUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +25,6 @@ import java.util.Random;
  */
 @Service("foreignSesrvice")
 public class ForeignServiceImpl implements IForeignSesrvice {
-
-    @Autowired
-    private IGameConfigService iGameConfigService;
 
     @Autowired
     private IGameUserService iGameUserService;
